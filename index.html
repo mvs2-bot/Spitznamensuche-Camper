@@ -8,6 +8,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         input, textarea { font-size: 16px !important; }
+
+        /* Variable Animation für das Auto, die per JavaScript gesteuert wird */
+        @keyframes drive {
+            0% { transform: translateX(0px); }
+            100% { transform: translateX(var(--travel-distance, 250px)); }
+        }
+        .animate-car {
+            animation: drive var(--anim-duration, 3s) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col justify-between p-3 overflow-hidden selection:bg-emerald-500 selection:text-white">
@@ -77,11 +86,28 @@
                         placeholder="Kurze Story oder Begründung..."></textarea>
                 </div>
 
+                <!-- ABSENDE-BUTTON -->
                 <button type="submit" id="submitBtn"
                     class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition duration-200 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2">
                     <span>Vorschlag abschicken</span>
                     <span>🚀</span>
                 </button>
+
+                <!-- AUTO-LADEBALKEN -->
+                <div id="loadingContainer" class="hidden space-y-1.5 pt-1">
+                    <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+                        <span>Fahre zur Google-Tabelle...</span>
+                        <span id="loadingStatus">Unterwegs 🚐</span>
+                    </div>
+                    <!-- Schiene -->
+                    <div id="railTrack" class="w-full h-8 bg-slate-950 rounded-xl overflow-hidden px-2 border border-slate-800 relative flex items-center">
+                        <!-- Bewegliches Auto -->
+                        <div id="carMover" class="absolute left-2 text-base animate-car">
+                            🚐
+                        </div>
+                    </div>
+                </div>
+
             </form>
         </div>
     </main>
@@ -135,13 +161,28 @@
 
         const form = document.getElementById('nicknameForm');
         const submitBtn = document.getElementById('submitBtn');
+        const loadingContainer = document.getElementById('loadingContainer');
         const modal = document.getElementById('successModal');
         const modalContent = document.getElementById('modalContent');
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Wird gesendet... ⏳';
+            
+            // Button verstecken, Ladebalken anzeigen
+            submitBtn.classList.add('hidden');
+            loadingContainer.classList.remove('hidden');
+
+            // Exakte Fahrstrecke berechnen (Breite der Schiene minus Autobreite)
+            const railTrack = document.getElementById('railTrack');
+            const carMover = document.getElementById('carMover');
+            const distance = railTrack.clientWidth - carMover.clientWidth - 16; 
+
+            // Zufällige Dauer zwischen 2.0 und 4.0 Sekunden generieren (z.B. 2.7s)
+            const randomDuration = (Math.random() * 2 + 2).toFixed(2); // Sek.
+
+            // CSS Variablen dynamisch setzen
+            carMover.style.setProperty('--travel-distance', distance + 'px');
+            carMover.style.setProperty('--anim-duration', randomDuration + 's');
 
             const formData = {
                 "Spitzname": document.getElementById('nickname').value,
@@ -150,29 +191,42 @@
                 "Zeitpunkt": new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })
             };
 
-            try {
-                let response = await fetch(sheetApiUrl, {
-                    method: 'POST',
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    modal.classList.remove('hidden');
-                    setTimeout(() => {
-                        modal.classList.remove('opacity-0');
-                        modalContent.classList.remove('scale-95');
-                    }, 10);
-                    fetchCounter();
-                } else {
-                    alert('Hoppla, das hat leider nicht geklappt. Versuch es noch einmal.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Vorschlag abschicken 🚀';
-                }
-            } catch (err) {
-                alert('Netzwerkfehler. Bitte prüfe deine Verbindung.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Vorschlag abschicken 🚀';
+            function showSuccess() {
+                loadingContainer.classList.add('hidden');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10);
+                fetchCounter();
             }
+
+            let requestFinished = false;
+
+            // Daten im Hintergrund abschicken
+            fetch(sheetApiUrl, {
+                method: 'POST',
+                body: JSON.stringify(formData)
+            }).then(() => {
+                if (!requestFinished) {
+                    requestFinished = true;
+                    showSuccess();
+                }
+            }).catch(err => {
+                if (!requestFinished) {
+                    requestFinished = true;
+                    showSuccess();
+                }
+            });
+
+            // Das Pop-up öffnet sich exakt nach der zufälligen Auto-Fahrzeit (in Millisekunden)
+            const timeoutMs = parseFloat(randomDuration) * 1000;
+            setTimeout(() => {
+                if (!requestFinished) {
+                    requestFinished = true;
+                    showSuccess();
+                }
+            }, timeoutMs);
         });
 
         function closeModal() {
@@ -187,8 +241,8 @@
             document.getElementById('count-author').innerText = '0 / 20';
             document.getElementById('count-reason').innerText = '0 / 200';
             
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Vorschlag abschicken 🚀';
+            loadingContainer.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
             fetchCounter();
         }
     </script>
