@@ -10,75 +10,75 @@
         input, textarea { font-size: 16px !important; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-4 selection:bg-emerald-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 h-screen flex flex-col justify-between p-3 overflow-hidden selection:bg-emerald-500 selection:text-white">
 
     <!-- Header / Counter oben -->
-    <header class="w-full max-w-lg mx-auto flex justify-between items-center py-4 px-2">
-        <span class="text-xs font-semibold tracking-wider uppercase text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full shadow-sm">
+    <header class="w-full max-w-md mx-auto flex justify-between items-center py-1 px-1">
+        <span class="text-[11px] font-semibold tracking-wider uppercase text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full shadow-sm">
             🚐 Ford Tourneo Connect
         </span>
-        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full text-xs font-medium text-emerald-400 shadow-sm">
+        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full text-[11px] font-medium text-emerald-400 shadow-sm">
             <span class="relative flex h-2 w-2">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span id="counterValue">...</span> Vorschläge eingereicht
+            <span id="counterValue">...</span> Vorschläge
         </div>
     </header>
 
     <!-- Main Content Card -->
-    <main class="w-full max-w-lg mx-auto my-auto py-2">
-        <div class="bg-slate-900/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-800">
+    <main class="w-full max-w-md mx-auto my-auto">
+        <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-5 border border-slate-800">
             
             <!-- Titel-Bereich -->
-            <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-3xl mb-3 shadow-inner">
+            <div class="text-center mb-4">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-1.5 shadow-inner">
                     ⛺
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Wie soll mein Camper heißen?</h1>
-                <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-                    Campingbox, Dachzelt und jede Menge Abenteuer warten. Welcher Spitzname passt perfekt zu meinem Gefährt? Hau in die Tasten!
+                <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">Wie soll mein Camper heißen?</h1>
+                <p class="text-slate-400 text-xs mt-1 leading-relaxed max-w-xs mx-auto">
+                    Campingbox & Dachzelt sind bereit. Welcher Spitzname passt perfekt?
                 </p>
             </div>
 
             <!-- Formular (Ersetze DEINE_FORM_ID mit deiner Formspree-ID) -->
-            <form action="https://formspree.io/f/DEINE_FORM_ID" method="POST" class="space-y-4" id="nicknameForm">
+            <form action="https://formspree.io/f/DEINE_FORM_ID" method="POST" class="space-y-3" id="nicknameForm">
                 
                 <!-- Namensvorschlag (max. 40 Zeichen) -->
                 <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label for="nickname" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Dein Namensvorschlag *</label>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="nickname" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Dein Namensvorschlag *</label>
                         <span id="count-nickname" class="text-[10px] text-slate-500">0 / 40</span>
                     </div>
                     <input type="text" id="nickname" name="Spitzname" required maxlength="40" oninput="updateCount('nickname', 40)"
-                        class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 transition"
+                        class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 text-sm transition"
                         placeholder="z.B. Rollende Festung, Bergbuddy...">
                 </div>
 
                 <!-- Name des Vorschlagenden (max. 20 Zeichen) -->
                 <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label for="author" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Dein Name (optional)</label>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="author" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Dein Name (optional)</label>
                         <span id="count-author" class="text-[10px] text-slate-500">0 / 20</span>
                     </div>
                     <input type="text" id="author" name="Vorgeschlagen von" maxlength="20" oninput="updateCount('author', 20)"
-                        class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 transition"
+                        class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 text-sm transition"
                         placeholder="Wer schlägt das vor?">
                 </div>
 
                 <!-- Begründung (max. 200 Zeichen) -->
                 <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label for="reason" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Warum passt dieser Name? (optional)</label>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="reason" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Warum passt dieser Name? (optional)</label>
                         <span id="count-reason" class="text-[10px] text-slate-500">0 / 200</span>
                     </div>
-                    <textarea id="reason" name="Begründung" rows="3" maxlength="200" oninput="updateCount('reason', 200)"
-                        class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 transition resize-none"
+                    <textarea id="reason" name="Begründung" rows="2" maxlength="200" oninput="updateCount('reason', 200)"
+                        class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 text-sm transition resize-none"
                         placeholder="Kurze Story oder Begründung..."></textarea>
                 </div>
 
                 <button type="submit" id="submitBtn"
-                    class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl transition duration-200 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2">
+                    class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition duration-200 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2">
                     <span>Vorschlag abschicken</span>
                     <span>🚀</span>
                 </button>
@@ -86,22 +86,20 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-lg mx-auto text-center py-4 text-xs text-slate-600">
-        Bereit für das nächste Mini-Camper-Abenteuer 🌲
-    </footer>
+    <!-- Platzhalter unten für perfekte Zentrierung -->
+    <div class="h-2"></div>
 
-    <!-- POP-OVER / MODAL (Standardmäßig unsichtbar) -->
+    <!-- POP-OVER / MODAL -->
     <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-3xl mb-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-3">
                 🎉
             </div>
-            <h2 class="text-xl font-bold text-white">Vielen Dank für deinen Vorschlag!</h2>
-            <p class="text-slate-400 text-sm mt-2">
+            <h2 class="text-lg font-bold text-white">Vielen Dank für deinen Vorschlag!</h2>
+            <p class="text-slate-400 text-xs mt-1.5">
                 Der Name ist sicher angekommen und der Counter wurde aktualisiert.
             </p>
-            <button onclick="closeModal()" class="mt-6 w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-emerald-900/30">
+            <button onclick="closeModal()" class="mt-5 w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition shadow-lg shadow-emerald-900/30">
                 Weiteren Vorschlag abgeben
             </button>
         </div>
@@ -109,7 +107,6 @@
 
     <!-- Logik für Counter, Zeichenzählung, Modal & AJAX Submit -->
     <script>
-        // Live Zeichenzähler
         function updateCount(fieldId, max) {
             const field = document.getElementById(fieldId);
             const counter = document.getElementById('count-' + fieldId);
@@ -122,7 +119,6 @@
             }
         }
 
-        // CountAPI Logik
         const namespace = 'camper_taufe_stefan_unique_id';
         const key = 'submissions';
 
@@ -146,7 +142,6 @@
 
         fetchCounter();
 
-        // Formular Absenden via AJAX
         const form = document.getElementById('nicknameForm');
         const submitBtn = document.getElementById('submitBtn');
         const modal = document.getElementById('successModal');
@@ -165,7 +160,6 @@
             });
 
             if (response.ok) {
-                // Pop-over anzeigen mit weicher Animation
                 modal.classList.remove('hidden');
                 setTimeout(() => {
                     modal.classList.remove('opacity-0');
@@ -181,14 +175,12 @@
         });
 
         function closeModal() {
-            // Pop-over ausblenden
             modal.classList.add('opacity-0');
             modalContent.classList.add('scale-95');
             setTimeout(() => {
                 modal.classList.add('hidden');
             }, 300);
 
-            // Formular zurücksetzen
             form.reset();
             document.getElementById('count-nickname').innerText = '0 / 40';
             document.getElementById('count-author').innerText = '0 / 20';
