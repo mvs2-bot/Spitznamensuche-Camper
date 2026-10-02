@@ -41,8 +41,8 @@
                 </p>
             </div>
 
-            <!-- Formular (Ersetze DEINE_FORM_ID mit deiner Formspree-ID) -->
-            <form action="https://formspree.io/f/DEINE_FORM_ID" method="POST" class="space-y-3" id="nicknameForm">
+            <!-- Formular -->
+            <form id="nicknameForm" class="space-y-3">
                 
                 <!-- Namensvorschlag (max. 40 Zeichen) -->
                 <div>
@@ -61,7 +61,7 @@
                         <label for="author" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Dein Name (optional)</label>
                         <span id="count-author" class="text-[10px] text-slate-500">0 / 20</span>
                     </div>
-                    <input type="text" id="author" name="Vorgeschlagen von" maxlength="20" oninput="updateCount('author', 20)"
+                    <input type="text" id="author" name="VorgeschlagenVon" maxlength="20" oninput="updateCount('author', 20)"
                         class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 text-sm transition"
                         placeholder="Wer schlägt das vor?">
                 </div>
@@ -72,7 +72,7 @@
                         <label for="reason" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Warum passt dieser Name? (optional)</label>
                         <span id="count-reason" class="text-[10px] text-slate-500">0 / 200</span>
                     </div>
-                    <textarea id="reason" name="Begründung" rows="2" maxlength="200" oninput="updateCount('reason', 200)"
+                    <textarea id="reason" name="Begruendung" rows="2" maxlength="200" oninput="updateCount('reason', 200)"
                         class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 text-sm transition resize-none"
                         placeholder="Kurze Story oder Begründung..."></textarea>
                 </div>
@@ -97,7 +97,7 @@
             </div>
             <h2 class="text-lg font-bold text-white">Vielen Dank für deinen Vorschlag!</h2>
             <p class="text-slate-400 text-xs mt-1.5">
-                Der Name ist sicher angekommen und der Counter wurde aktualisiert.
+                Der Name ist direkt in der Tabelle gelandet.
             </p>
             <button onclick="closeModal()" class="mt-5 w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition shadow-lg shadow-emerald-900/30">
                 Weiteren Vorschlag abgeben
@@ -105,8 +105,10 @@
         </div>
     </div>
 
-    <!-- Logik für Counter, Zeichenzählung, Modal & AJAX Submit -->
+    <!-- JavaScript Logik -->
     <script>
+        const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbwNSkbW9kCD4blonxr69zqJekOLBP0S2wSPoSF3s1m4QdL63D70p4njDNBivr3nT50/exec';
+
         function updateCount(fieldId, max) {
             const field = document.getElementById(fieldId);
             const counter = document.getElementById('count-' + fieldId);
@@ -119,25 +121,14 @@
             }
         }
 
-        const namespace = 'camper_taufe_stefan_unique_id';
-        const key = 'submissions';
-
         async function fetchCounter() {
             try {
-                let response = await fetch(`https://api.countapi.xyz/get/${namespace}/${key}`);
+                let response = await fetch(sheetApiUrl);
                 let data = await response.json();
-                document.getElementById('counterValue').innerText = data.value;
+                document.getElementById('counterValue').innerText = data.count;
             } catch (e) {
-                document.getElementById('counterValue').innerText = '1+';
+                document.getElementById('counterValue').innerText = '0';
             }
-        }
-
-        async function incrementCounter() {
-            try {
-                let response = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
-                let data = await response.json();
-                document.getElementById('counterValue').innerText = data.value;
-            } catch (e) {}
         }
 
         fetchCounter();
@@ -152,23 +143,33 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Wird gesendet... ⏳';
 
-            const data = new FormData(form);
-            const response = await fetch(e.target.action, {
-                method: 'POST',
-                body: data,
-                headers: { 'Accept': 'application/json' }
-            });
+            const formData = {
+                "Spitzname": document.getElementById('nickname').value,
+                "VorgeschlagenVon": document.getElementById('author').value,
+                "Begruendung": document.getElementById('reason').value,
+                "Zeitpunkt": new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })
+            };
 
-            if (response.ok) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    modalContent.classList.remove('scale-95');
-                }, 10);
+            try {
+                let response = await fetch(sheetApiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
 
-                await incrementCounter();
-            } else {
-                alert('Hoppla, da ist etwas schiefgelaufen. Versuch es bitte noch einmal.');
+                if (response.ok) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        modalContent.classList.remove('scale-95');
+                    }, 10);
+                    fetchCounter();
+                } else {
+                    alert('Hoppla, das hat leider nicht geklappt. Versuch es noch einmal.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Vorschlag abschicken 🚀';
+                }
+            } catch (err) {
+                alert('Netzwerkfehler. Bitte prüfe deine Verbindung.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Vorschlag abschicken 🚀';
             }
