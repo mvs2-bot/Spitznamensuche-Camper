@@ -9,13 +9,22 @@
     <style>
         input, textarea { font-size: 16px !important; }
 
-        /* Variable Animation für das Auto, die per JavaScript gesteuert wird */
-        @keyframes drive {
-            0% { transform: translateX(0px); }
-            100% { transform: translateX(var(--travel-distance, 250px)); }
+        /* Animation für den grünen Fortschrittsbalken */
+        @keyframes fillBar {
+            0% { width: 0%; }
+            100% { width: 100%; }
         }
-        .animate-car {
-            animation: drive var(--anim-duration, 3s) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        .animate-progress {
+            animation: fillBar var(--anim-duration, 4.5s) linear forwards;
+        }
+
+        /* Animation für das Auto, das am Ende des Balkens mitfährt */
+        @keyframes driveCar {
+            0% { transform: translateX(0px); }
+            100% { transform: translateX(var(--car-distance, 240px)); }
+        }
+        .animate-car-move {
+            animation: driveCar var(--anim-duration, 4.5s) linear forwards;
         }
     </style>
 </head>
@@ -92,22 +101,6 @@
                     <span>Vorschlag abschicken</span>
                     <span>🚀</span>
                 </button>
-
-                <!-- AUTO-LADEBALKEN -->
-                <div id="loadingContainer" class="hidden space-y-1.5 pt-1">
-                    <div class="flex justify-between text-[11px] text-slate-400 font-medium">
-                        <span>Fahre zur Google-Tabelle...</span>
-                        <span id="loadingStatus">Unterwegs 🚐</span>
-                    </div>
-                    <!-- Schiene -->
-                    <div id="railTrack" class="w-full h-8 bg-slate-950 rounded-xl overflow-hidden px-2 border border-slate-800 relative flex items-center">
-                        <!-- Bewegliches Auto -->
-                        <div id="carMover" class="absolute left-2 text-base animate-car">
-                            🚐
-                        </div>
-                    </div>
-                </div>
-
             </form>
         </div>
     </main>
@@ -115,9 +108,32 @@
     <!-- Platzhalter unten für perfekte Zentrierung -->
     <div class="h-2"></div>
 
-    <!-- POP-OVER / MODAL -->
+    <!-- LADE-MODAL (Pop-over mit grünem Balken und fahrendem Auto) -->
+    <div id="loadingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="loadingModalContent">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-3">
+                🚐
+            </div>
+            <h2 class="text-base font-bold text-white">Vorschlag wird übermittelt...</h2>
+            <p class="text-slate-400 text-xs mt-1 mb-5">
+                Packe die Campingbox ein und fahre ab!
+            </p>
+            
+            <!-- Grüner Ladebalken mit Auto -->
+            <div id="railTrack" class="w-full h-8 bg-slate-950 rounded-xl overflow-hidden px-1 border border-slate-800 relative flex items-center">
+                <!-- Grüner Fortschrittsbalken -->
+                <div id="progressBar" class="absolute left-0 top-0 bottom-0 bg-emerald-600/80 rounded-l-xl"></div>
+                <!-- Bewegliches Auto -->
+                <div id="carMover" class="absolute left-1 text-base z-10">
+                    🚐
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS-MODAL (Dankeschön Pop-over) -->
     <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="successModalContent">
             <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-3">
                 🎉
             </div>
@@ -160,30 +176,16 @@
         fetchCounter();
 
         const form = document.getElementById('nicknameForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const loadingContainer = document.getElementById('loadingContainer');
-        const modal = document.getElementById('successModal');
-        const modalContent = document.getElementById('modalContent');
+        
+        // Modals
+        const loadingModal = document.getElementById('loadingModal');
+        const loadingModalContent = document.getElementById('loadingModalContent');
+        const successModal = document.getElementById('successModal');
+        const successModalContent = document.getElementById('successModalContent');
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Button verstecken, Ladebalken anzeigen
-            submitBtn.classList.add('hidden');
-            loadingContainer.classList.remove('hidden');
-
-            // Exakte Fahrstrecke berechnen (Breite der Schiene minus Autobreite)
-            const railTrack = document.getElementById('railTrack');
-            const carMover = document.getElementById('carMover');
-            const distance = railTrack.clientWidth - carMover.clientWidth - 16; 
-
-            // Zufällige Dauer zwischen 2.0 und 4.0 Sekunden generieren (z.B. 2.7s)
-            const randomDuration = (Math.random() * 2 + 2).toFixed(2); // Sek.
-
-            // CSS Variablen dynamisch setzen
-            carMover.style.setProperty('--travel-distance', distance + 'px');
-            carMover.style.setProperty('--anim-duration', randomDuration + 's');
-
             const formData = {
                 "Spitzname": document.getElementById('nickname').value,
                 "VorgeschlagenVon": document.getElementById('author').value,
@@ -191,49 +193,81 @@
                 "Zeitpunkt": new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })
             };
 
-            function showSuccess() {
-                loadingContainer.classList.add('hidden');
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    modalContent.classList.remove('scale-95');
-                }, 10);
-                fetchCounter();
-            }
+            // 1. Zufällige Dauer zwischen 4.0 und 5.0 Sekunden generieren
+            const randomDuration = (Math.random() * 1 + 4).toFixed(2); // z.B. 4.35s
+
+            // 2. Lade-Modal einblenden
+            loadingModal.classList.remove('hidden');
+            setTimeout(() => {
+                loadingModal.classList.remove('opacity-0');
+                loadingModalContent.classList.remove('scale-95');
+
+                // Erst NACHDEM das Modal sichtbar ist, exakte Breiten berechnen und Animation starten
+                const railTrack = document.getElementById('railTrack');
+                const carMover = document.getElementById('carMover');
+                const progressBar = document.getElementById('progressBar');
+                
+                const distance = railTrack.clientWidth - carMover.clientWidth - 8;
+
+                // CSS-Variablen setzen
+                carMover.style.setProperty('--car-distance', distance + 'px');
+                document.documentElement.style.setProperty('--anim-duration', randomDuration + 's');
+
+                // Animationen manuell triggern
+                carMover.classList.add('animate-car-move');
+                progressBar.classList.add('animate-progress');
+            }, 50);
 
             let requestFinished = false;
+
+            function showSuccess() {
+                if (requestFinished) return;
+                requestFinished = true;
+
+                // Lade-Modal sanft ausblenden
+                loadingModal.classList.add('opacity-0');
+                loadingModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    loadingModal.classList.add('hidden');
+                    
+                    // Animationen für den nächsten Durchlauf zurücksetzen
+                    const carMover = document.getElementById('carMover');
+                    const progressBar = document.getElementById('progressBar');
+                    carMover.classList.remove('animate-car-move');
+                    progressBar.classList.remove('animate-progress');
+
+                    // Success-Modal einblenden
+                    successModal.classList.remove('hidden');
+                    setTimeout(() => {
+                        successModal.classList.remove('opacity-0');
+                        successModalContent.classList.remove('scale-95');
+                    }, 10);
+                    fetchCounter();
+                }, 300);
+            }
 
             // Daten im Hintergrund abschicken
             fetch(sheetApiUrl, {
                 method: 'POST',
                 body: JSON.stringify(formData)
             }).then(() => {
-                if (!requestFinished) {
-                    requestFinished = true;
-                    showSuccess();
-                }
+                // Warten bis die Animation abgelaufen ist
             }).catch(err => {
-                if (!requestFinished) {
-                    requestFinished = true;
-                    showSuccess();
-                }
+                console.error(err);
             });
 
-            // Das Pop-up öffnet sich exakt nach der zufälligen Auto-Fahrzeit (in Millisekunden)
+            // Das Lade-Modal bleibt exakt so lange offen, wie die Animation dauert (4 bis 5 Sekunden)
             const timeoutMs = parseFloat(randomDuration) * 1000;
             setTimeout(() => {
-                if (!requestFinished) {
-                    requestFinished = true;
-                    showSuccess();
-                }
+                showSuccess();
             }, timeoutMs);
         });
 
         function closeModal() {
-            modal.classList.add('opacity-0');
-            modalContent.classList.add('scale-95');
+            successModal.classList.add('opacity-0');
+            successModalContent.classList.add('scale-95');
             setTimeout(() => {
-                modal.classList.add('hidden');
+                successModal.classList.add('hidden');
             }, 300);
 
             form.reset();
@@ -241,8 +275,6 @@
             document.getElementById('count-author').innerText = '0 / 20';
             document.getElementById('count-reason').innerText = '0 / 200';
             
-            loadingContainer.classList.add('hidden');
-            submitBtn.classList.remove('hidden');
             fetchCounter();
         }
     </script>
