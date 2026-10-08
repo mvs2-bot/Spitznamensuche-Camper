@@ -44,7 +44,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 h-screen flex flex-col justify-between p-3 overflow-hidden selection:bg-emerald-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col p-3 selection:bg-emerald-500 selection:text-white">
 
     <!-- Header / Counter oben -->
     <header class="w-full max-w-md mx-auto flex justify-between items-center py-1 px-1">
@@ -126,6 +126,21 @@
     <!-- Platzhalter unten für perfekte Zentrierung -->
     <div class="h-2"></div>
 
+    <!-- RANKING-TABELLE -->
+    <section class="w-full max-w-md mx-auto mt-6 mb-4">
+        <div class="bg-slate-900/90 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
+            <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                <h2 class="text-sm font-bold text-white">Aktuelle Vorschläge</h2>
+                <span class="text-[10px] text-slate-500">Sortiert nach 👍</span>
+            </div>
+            <table class="w-full text-left">
+                <tbody id="rankingBody">
+                    <tr><td class="px-4 py-4 text-xs text-slate-500">Lade Vorschläge...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
     <!-- LADE-MODAL (Pop-over mit grünem Balken und fahrendem Auto) -->
     <div id="loadingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="loadingModalContent">
@@ -192,6 +207,90 @@
         }
 
         fetchCounter();
+
+        // ===== Ranking =====
+        let proposals = [];
+        const votedKey = 'camperVotes';
+
+        function getVoted() {
+            try { return JSON.parse(localStorage.getItem(votedKey)) || {}; } catch (e) { return {}; }
+        }
+        function saveVoted(v) {
+            try { localStorage.setItem(votedKey, JSON.stringify(v)); } catch (e) {}
+        }
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function renderRanking() {
+            const body = document.getElementById('rankingBody');
+            if (!proposals.length) {
+                body.innerHTML = '<tr><td class="px-4 py-4 text-xs text-slate-500">Noch keine Vorschläge – sei der Erste!</td></tr>';
+                return;
+            }
+            const voted = getVoted();
+            const sorted = [...proposals].sort((a, b) => b.votes - a.votes || a.row - b.row);
+            body.innerHTML = sorted.map((p, i) => {
+                const key = p.row + ':' + p.name;
+                const isVoted = !!voted[key];
+                const medal = ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
+                const meta = [p.author ? 'von ' + escapeHtml(p.author) : '', p.reason ? escapeHtml(p.reason) : '']
+                    .filter(Boolean).join(' · ');
+                return `
+                <tr class="border-t border-slate-800/70 first:border-t-0">
+                    <td class="pl-4 pr-2 py-2.5 text-sm w-10 text-slate-400">${medal}</td>
+                    <td class="py-2.5 pr-2">
+                        <div class="text-sm font-semibold text-white break-words">${escapeHtml(p.name)}</div>
+                        ${meta ? `<div class="text-[11px] text-slate-500 mt-0.5 break-words">${meta}</div>` : ''}
+                    </td>
+                    <td class="pr-4 py-2.5 text-right w-16">
+                        <button data-row="${p.row}" data-name="${escapeHtml(p.name)}"
+                            class="vote-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-semibold transition
+                            ${isVoted ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-emerald-500'}">
+                            👍 <span>${p.votes}</span>
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        async function loadProposals() {
+            try {
+                const r = await fetch(sheetApiUrl + '?action=list');
+                const data = await r.json();
+                proposals = data.items || [];
+                renderRanking();
+            } catch (e) {
+                if (!proposals.length) {
+                    document.getElementById('rankingBody').innerHTML =
+                        '<tr><td class="px-4 py-4 text-xs text-slate-500">Vorschläge konnten nicht geladen werden.</td></tr>';
+                }
+            }
+        }
+
+        async function toggleVote(row, name) {
+            const p = proposals.find(x => x.row === row);
+            if (!p) return;
+            const key = row + ':' + name;
+            const voted = getVoted();
+            const delta = voted[key] ? -1 : 1;
+            if (delta === 1) voted[key] = true; else delete voted[key];
+            saveVoted(voted);
+            p.votes = Math.max(0, p.votes + delta);
+            renderRanking(); // sofortige Rückmeldung
+            try {
+                await fetch(sheetApiUrl, { method: 'POST', body: JSON.stringify({ action: 'vote', row: row, name: name, delta: delta }) });
+            } catch (err) { console.error(err); }
+            loadProposals(); // echten Stand holen
+        }
+
+        document.getElementById('rankingBody').addEventListener('click', function (e) {
+            const btn = e.target.closest('.vote-btn');
+            if (btn) toggleVote(Number(btn.dataset.row), btn.dataset.name);
+        });
+
+        loadProposals();
+        // ===== Ende Ranking =====
 
         const form = document.getElementById('nicknameForm');
         
@@ -262,6 +361,7 @@
                         successModalContent.classList.remove('scale-95');
                     }, 10);
                     fetchCounter();
+                    loadProposals();
                 }, 300);
             }
 
