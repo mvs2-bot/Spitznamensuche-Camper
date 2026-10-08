@@ -234,8 +234,7 @@
                 const key = p.row + ':' + p.name;
                 const isVoted = !!voted[key];
                 const medal = ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
-                const meta = [p.author ? 'von ' + escapeHtml(p.author) : '', p.reason ? escapeHtml(p.reason) : '']
-                    .filter(Boolean).join(' · ');
+                const meta = p.reason ? escapeHtml(p.reason) : '';
                 return `
                 <tr class="border-t border-slate-800/70 first:border-t-0">
                     <td class="pl-4 pr-2 py-2.5 text-sm w-10 text-slate-400">${medal}</td>
