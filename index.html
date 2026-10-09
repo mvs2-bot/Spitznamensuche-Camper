@@ -182,7 +182,7 @@
 
     <!-- JavaScript Logik -->
     <script>
-        const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbwR33zwlZYGtO3IIVwXf0CTkxzXWNe6WrNcVFv1fjilPW6loIC4xOX2kar_QGYJDkE/exec';
+        const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbwNSkbW9kCD4blonxr69zqJekOLBP0S2wSPoSF3s1m4QdL63D70p4njDNBivr3nT50/exec';
 
         function updateCount(fieldId, max) {
             const field = document.getElementById(fieldId);
@@ -233,13 +233,14 @@
             body.innerHTML = sorted.map((p, i) => {
                 const key = p.row + ':' + p.name;
                 const isVoted = !!voted[key];
+                const isNew = p.ts && (Date.now() - p.ts) < 24 * 60 * 60 * 1000;
                 const medal = ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
                 const meta = p.reason ? escapeHtml(p.reason) : '';
                 return `
                 <tr class="border-t border-slate-800/70 first:border-t-0">
                     <td class="pl-4 pr-2 py-2.5 text-sm w-10 text-slate-400">${medal}</td>
                     <td class="py-2.5 pr-2">
-                        <div class="text-sm font-semibold text-white break-words">${escapeHtml(p.name)}</div>
+                        <div class="text-sm font-semibold text-white break-words">${escapeHtml(p.name)}${isNew ? ' <span class="ml-1 align-middle px-1.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[9px] font-bold uppercase tracking-wider">Neu</span>' : ''}</div>
                         ${meta ? `<div class="text-[11px] text-slate-500 mt-0.5 break-words">${meta}</div>` : ''}
                     </td>
                     <td class="pr-4 py-2.5 text-right w-16">
@@ -257,7 +258,8 @@
             try {
                 const r = await fetch(sheetApiUrl + '?action=list');
                 const data = await r.json();
-                proposals = data.items || [];
+                if (!Array.isArray(data.items)) throw new Error('Keine Liste erhalten');
+                proposals = data.items;
                 renderRanking();
             } catch (e) {
                 if (!proposals.length) {
