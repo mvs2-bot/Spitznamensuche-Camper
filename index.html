@@ -61,6 +61,12 @@
         :root[data-theme="light"] .hover\:border-emerald-500:hover { border-color: #10b981; }
         :root[data-theme="light"] .bg-emerald-600.text-white { color: #ffffff; }
 </style>
+
+<!-- PATCH: PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Camper-Namen">
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col p-3 selection:bg-emerald-500 selection:text-white">
 
@@ -442,5 +448,6 @@
             fetchCounter();
         }
     </script>
+<script>/* PATCH: PWA */if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
 </body>
 </html>
