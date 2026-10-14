@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
     <!-- PRIVATSPHÄRE-OPTIMIERUNGEN -->
     <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="referrer" content="no-referrer">
     <meta name="theme-color" content="#09090b">
-    <script>/* PATCH: Theme (frueh laden, Standard = dunkel) */(function(){try{if(localStorage.getItem('camper_theme_v1')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();</script>
+    <script>/* Theme früh laden, Standard = dunkel */(function(){try{if(localStorage.getItem('camper_theme_v1')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();</script>
 
     <title>Namenssuche für den Camper-Bus</title>
-    
-    <!-- Camper-Emoji als Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚐</text></svg>">
 
-    <!-- Hochwertige Schriftart (Plus Jakarta Sans) -->
+    <!-- Icons -->
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="icon" href="icon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Camper-Namen">
+
+    <!-- Schriftart (Plus Jakarta Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,31 +35,31 @@
         input, textarea { font-size: 13px !important; }
 
         /* Animation für den grünen Fortschrittsbalken */
-        @keyframes fillBar {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        .animate-progress {
-            animation: fillBar var(--anim-duration, 4.5s) linear forwards;
-        }
+        @keyframes fillBar { 0% { width: 0%; } 100% { width: 100%; } }
+        .animate-progress { animation: fillBar var(--anim-duration, 4.5s) linear forwards; }
 
         /* Animation für das Auto, das am Ende des Balkens mitfährt */
-        @keyframes driveCar {
-            0% { transform: translateX(0px); }
-            100% { transform: translateX(var(--car-distance, 240px)); }
-        }
-        .animate-car-move {
-            animation: driveCar var(--anim-duration, 4.5s) linear forwards;
-        }
-    
-        /* PATCH: Theme (Camper) */
+        @keyframes driveCar { 0% { transform: translateX(0px); } 100% { transform: translateX(var(--car-distance, 240px)); } }
+        .animate-car-move { animation: driveCar var(--anim-duration, 4.5s) linear forwards; }
+
+        /* Sonne/Mond-Schalter im Stil der Burger-Buttons (QuickTools / Reise-Seiten) */
+        .theme-toggle { padding: 7px 10px; border-width: 1.5px; line-height: 1; }
+        .theme-toggle svg { width: 18px; height: 18px; display: block; }
+        .theme-toggle .icon-moon { display: none; }
+        :root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+        :root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+
+        button:disabled { opacity: .55; cursor: not-allowed; }
+
+        /* Heller Modus */
         :root[data-theme="light"] body.bg-slate-950 { background-color: #eef2f6; }
         :root[data-theme="light"] .text-slate-100, :root[data-theme="light"] .text-white { color: #0f172a; }
         :root[data-theme="light"] .text-slate-300 { color: #334155; }
         :root[data-theme="light"] .text-slate-400 { color: #475569; }
         :root[data-theme="light"] .text-slate-500 { color: #64748b; }
         :root[data-theme="light"] .text-emerald-400 { color: #047857; }
-        :root[data-theme="light"] .text-amber-400 { color: #b45309; }
+        :root[data-theme="light"] .text-amber-400, :root[data-theme="light"] .text-amber-300 { color: #b45309; }
+        :root[data-theme="light"] .text-rose-300 { color: #be123c; }
         :root[data-theme="light"] .bg-slate-900, :root[data-theme="light"] .bg-slate-900\/90, :root[data-theme="light"] .bg-slate-950 { background-color: #ffffff; }
         :root[data-theme="light"] input.bg-slate-950, :root[data-theme="light"] textarea.bg-slate-950 { background-color: #f8fafc; }
         :root[data-theme="light"] .bg-slate-950\/80 { background-color: rgba(15, 23, 42, .45); }
@@ -60,63 +68,77 @@
         :root[data-theme="light"] .placeholder-slate-600::placeholder { color: #94a3b8; }
         :root[data-theme="light"] .hover\:border-emerald-500:hover { border-color: #10b981; }
         :root[data-theme="light"] .bg-emerald-600.text-white { color: #ffffff; }
-</style>
-
-<!-- PATCH: PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Camper-Namen">
+        :root[data-theme="light"] .bg-emerald-600 .text-white { color: #ffffff; }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col p-3 selection:bg-emerald-500 selection:text-white">
 
-    <!-- Header / Counter oben -->
+    <!-- Offline-Hinweis -->
+    <div id="offlineBar" class="hidden w-full max-w-md mx-auto mb-2 px-3 py-2 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-300 text-[11px] font-medium text-center">
+        📡 Offline – Vorschläge werden angezeigt, Absenden &amp; Abstimmen geht erst wieder mit Netz.
+    </div>
+
+    <!-- Header -->
     <header class="w-full max-w-md mx-auto flex justify-between items-center py-1 px-1">
         <span class="text-[10px] font-semibold tracking-wider uppercase text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full shadow-sm">
             🚐 Ford Tourneo Connect
         </span>
         <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full text-[11px] font-medium text-emerald-400 shadow-sm">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span id="counterValue">…</span> Vorschläge
+            </div>
             <button id="themeToggle" type="button" aria-label="Zum hellen Modus wechseln" title="Hellen Modus aktivieren"
-                class="theme-toggle flex items-center justify-center w-7 h-7 leading-none text-sm bg-slate-900 border border-slate-800 rounded-full shadow-sm hover:border-emerald-500 transition">☀️</button>
-        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full text-[11px] font-medium text-emerald-400 shadow-sm">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span id="counterValue">...</span> Vorschläge
-        </div>
+                class="theme-toggle flex items-center justify-center text-slate-300 bg-slate-900 border border-slate-800 rounded-xl shadow-sm hover:border-emerald-500 transition">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
         </div>
     </header>
 
     <!-- Main Content Card -->
     <main class="w-full max-w-md mx-auto my-auto">
         <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-4 sm:p-5 border border-slate-800">
-            
-            <!-- Titel-Bereich mit vergrößertem Camper-Foto -->
+
+            <!-- Titel-Bereich mit Camper-Foto -->
             <div class="text-center mb-3">
-                <!-- Größeres Vorschaubild -->
                 <div class="inline-block mb-2 p-1.5 bg-slate-950 border border-slate-800 rounded-2xl shadow-inner overflow-hidden">
-                    <img src="logo.jpg" alt="Mein Camper" class="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-xl hover:scale-105 transition duration-300">
+                    <img src="logo.jpg" alt="Mein Camper" width="176" height="176" class="w-36 h-36 sm:w-44 sm:h-44 object-cover rounded-xl hover:scale-105 transition duration-300">
                 </div>
 
                 <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight text-white">Wie soll mein Camper heißen?</h1>
                 <p class="text-slate-400 text-[11px] sm:text-xs mt-1 leading-relaxed max-w-xs mx-auto">
-                    Campingbox & Dachzelt sind bereit. Welcher Spitzname passt perfekt?
+                    Campingbox &amp; Dachzelt sind bereit. Welcher Spitzname passt perfekt?
                 </p>
+
+                <!-- Countdown / Enddatum (nur sichtbar, wenn VOTING_END gesetzt ist) -->
+                <div id="deadlineBox" class="hidden mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950 border border-slate-800 text-[11px] font-medium text-amber-400">
+                    ⏳ <span id="deadlineText"></span>
+                </div>
+            </div>
+
+            <!-- Gewinner (nur nach Ende der Abstimmung) -->
+            <div id="winnerBox" class="hidden mb-3 p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-center">
+                <div class="text-[10px] font-semibold uppercase tracking-wider text-emerald-400">Die Abstimmung ist beendet – der Camper heißt</div>
+                <div id="winnerName" class="text-xl font-extrabold text-white mt-1"></div>
             </div>
 
             <!-- Formular -->
-            <form id="nicknameForm" class="space-y-2.5">
-                
+            <form id="nicknameForm" class="space-y-2.5" novalidate>
+
                 <!-- Namensvorschlag (max. 40 Zeichen) -->
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label for="nickname" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Dein Namensvorschlag *</label>
                         <span id="count-nickname" class="text-[10px] text-slate-500">0 / 40</span>
                     </div>
-                    <input type="text" id="nickname" name="Spitzname" required maxlength="40" autocomplete="off" oninput="updateCount('nickname', 40)"
+                    <input type="text" id="nickname" name="Spitzname" required maxlength="40" autocomplete="off"
                         class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 transition"
                         placeholder="z.B. Knutschkugel, Heimo 2.0, ...">
+                    <p id="nicknameHint" class="hidden text-[11px] mt-1 text-amber-400"></p>
                 </div>
 
                 <!-- Name des Vorschlagenden (max. 20 Zeichen) -->
@@ -125,7 +147,7 @@
                         <label for="author" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Dein Name (optional)</label>
                         <span id="count-author" class="text-[10px] text-slate-500">0 / 20</span>
                     </div>
-                    <input type="text" id="author" name="VorgeschlagenVon" maxlength="20" autocomplete="name" oninput="updateCount('author', 20)"
+                    <input type="text" id="author" name="VorgeschlagenVon" maxlength="20" autocomplete="name"
                         class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 transition"
                         placeholder="Wer schlägt das vor?">
                 </div>
@@ -136,22 +158,36 @@
                         <label for="reason" class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300">Warum passt dieser Name? (optional)</label>
                         <span id="count-reason" class="text-[10px] text-slate-500">0 / 200</span>
                     </div>
-                    <textarea id="reason" name="Begruendung" rows="2" maxlength="200" autocomplete="off" oninput="updateCount('reason', 200)"
+                    <textarea id="reason" name="Begruendung" rows="2" maxlength="200" autocomplete="off"
                         class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none text-white placeholder-slate-600 transition resize-none"
                         placeholder="Kurze Story oder Begründung..."></textarea>
                 </div>
 
+                <!-- Fehlermeldung beim Absenden -->
+                <p id="submitError" class="hidden text-[11px] text-rose-300 bg-rose-500/10 border border-rose-500/30 rounded-xl px-3 py-2"></p>
+
                 <!-- ABSENDE-BUTTON -->
                 <button type="submit" id="submitBtn"
                     class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition duration-200 shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2">
-                    <span>Vorschlag abschicken</span>
+                    <span class="text-white">Vorschlag abschicken</span>
                     <span>🚀</span>
                 </button>
+
+                <p class="text-[10px] leading-relaxed text-slate-500 text-center pt-0.5">
+                    🔒 Dein Name ist nur für mich sichtbar und erscheint nicht in der Liste.
+                    Vorschläge werden in einer privaten Google-Tabelle gespeichert.
+                </p>
             </form>
         </div>
+
+        <!-- Teilen -->
+        <button id="shareBtn" type="button"
+            class="mt-3 w-full py-2.5 px-4 bg-slate-900 border border-slate-800 hover:border-emerald-500 text-slate-300 font-semibold rounded-xl text-sm transition flex items-center justify-center gap-2">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+            <span id="shareLabel">Link teilen &amp; Freunde abstimmen lassen</span>
+        </button>
     </main>
 
-    <!-- Platzhalter unten für perfekte Zentrierung -->
     <div class="h-2"></div>
 
     <!-- RANKING-TABELLE -->
@@ -169,96 +205,98 @@
         </div>
     </section>
 
-    <!-- LADE-MODAL (Pop-over mit grünem Balken und fahrendem Auto) -->
+    <!-- LADE-MODAL -->
     <div id="loadingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="loadingModalContent">
-            <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-3">
-                🚐
-            </div>
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-3">🚐</div>
             <h2 class="text-base font-bold text-white">Vorschlag wird übermittelt...</h2>
-            <p class="text-slate-400 text-xs mt-1 mb-5">
-                Packe die Campingbox ein und fahre ab!
-            </p>
-            
-            <!-- Grüner Ladebalken mit Auto -->
+            <p class="text-slate-400 text-xs mt-1 mb-5">Packe die Campingbox ein und fahre ab!</p>
             <div id="railTrack" class="w-full h-8 bg-slate-950 rounded-xl overflow-hidden px-1 border border-slate-800 relative flex items-center">
-                <!-- Grüner Fortschrittsbalken -->
                 <div id="progressBar" class="absolute left-0 top-0 bottom-0 bg-emerald-600/80 rounded-l-xl"></div>
-                <!-- Bewegliches Auto -->
-                <div id="carMover" class="absolute left-1 text-base z-10">
-                    🚐
-                </div>
+                <div id="carMover" class="absolute left-1 text-base z-10">🚐</div>
             </div>
         </div>
     </div>
 
-    <!-- SUCCESS-MODAL (Dankeschön Pop-over) -->
+    <!-- SUCCESS-MODAL -->
     <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xs w-full text-center shadow-2xl transform scale-95 transition-transform duration-300" id="successModalContent">
-            <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-3">
-                🎉
-            </div>
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-2xl mb-3">🎉</div>
             <h2 class="text-lg font-bold text-white">Vielen Dank für deinen Vorschlag!</h2>
-            <p class="text-slate-400 text-xs mt-1.5">
-                Der Name ist direkt in der Tabelle gelandet.
-            </p>
-            <button onclick="closeModal()" class="mt-5 w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition shadow-lg shadow-emerald-900/30">
+            <p class="text-slate-400 text-xs mt-1.5">Der Name ist direkt in der Tabelle gelandet.</p>
+            <button id="againBtn" type="button" class="mt-5 w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition shadow-lg shadow-emerald-900/30">
                 Weiteren Vorschlag abgeben
+            </button>
+            <button id="shareBtn2" type="button" class="mt-2 w-full py-2 px-4 bg-slate-950 border border-slate-800 hover:border-emerald-500 text-slate-300 font-semibold rounded-xl text-xs transition">
+                Link teilen 📤
             </button>
         </div>
     </div>
 
-    <!-- JavaScript Logik -->
     <script>
+        /* ================= Einstellungen ================= */
         const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbwR33zwlZYGtO3IIVwXf0CTkxzXWNe6WrNcVFv1fjilPW6loIC4xOX2kar_QGYJDkE/exec';
 
-        function updateCount(fieldId, max) {
-            const field = document.getElementById(fieldId);
-            const counter = document.getElementById('count-' + fieldId);
-            const currentLength = field.value.length;
-            counter.innerText = `${currentLength} / ${max}`;
-            if (currentLength >= max) {
-                counter.classList.add('text-amber-400');
-            } else {
-                counter.classList.remove('text-amber-400');
-            }
-        }
+        // Ende der Abstimmung. Leer lassen = kein Enddatum.
+        // Beispiel: '2026-11-30T20:00:00+01:00'
+        const VOTING_END = '2027-02-28T23:59:59+01:00';
 
-        async function fetchCounter() {
-            try {
-                let response = await fetch(sheetApiUrl);
-                let data = await response.json();
-                document.getElementById('counterValue').innerText = data.count;
-            } catch (e) {
-                document.getElementById('counterValue').innerText = '0';
-            }
-        }
+        const SHARE_TEXT = 'Hilf mit, einen Namen für meinen Camper zu finden! 🚐 Schlag einen vor oder gib deinen Daumen ab:';
+        /* ================================================= */
 
-        fetchCounter();
+        const $ = id => document.getElementById(id);
+        const form = $('nicknameForm');
+        const submitBtn = $('submitBtn');
+        const endDate = VOTING_END ? new Date(VOTING_END) : null;
+        const isEnded = () => !!endDate && Date.now() >= endDate.getTime();
+        const isOnline = () => navigator.onLine !== false;
 
-        // ===== Ranking =====
-        let proposals = [];
-        const votedKey = 'camperVotes';
-
-        function getVoted() {
-            try { return JSON.parse(localStorage.getItem(votedKey)) || {}; } catch (e) { return {}; }
-        }
-        function saveVoted(v) {
-            try { localStorage.setItem(votedKey, JSON.stringify(v)); } catch (e) {}
-        }
         function escapeHtml(s) {
             return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
+        function normName(s) {
+            return String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9ß]+/g, '');
+        }
+
+        /* ===== Zeichenzähler ===== */
+        function updateCount(fieldId, max) {
+            const len = $(fieldId).value.length;
+            const counter = $('count-' + fieldId);
+            counter.innerText = `${len} / ${max}`;
+            counter.classList.toggle('text-amber-400', len >= max);
+        }
+        [['nickname', 40], ['author', 20], ['reason', 200]].forEach(([id, max]) => {
+            $(id).addEventListener('input', () => updateCount(id, max));
+        });
+
+        /* ===== Vorschläge & Ranking ===== */
+        let proposals = [];
+        let loaded = false;
+        let lastLoad = 0;
+        const votedKey = 'camperVotes';
+
+        function getVoted() { try { return JSON.parse(localStorage.getItem(votedKey)) || {}; } catch (e) { return {}; } }
+        function saveVoted(v) { try { localStorage.setItem(votedKey, JSON.stringify(v)); } catch (e) {} }
+
+        function sortedProposals() {
+            return [...proposals].sort((a, b) => b.votes - a.votes || a.row - b.row);
+        }
+
+        function renderCounter() {
+            $('counterValue').innerText = loaded ? proposals.length : '–';
+        }
 
         function renderRanking() {
-            const body = document.getElementById('rankingBody');
+            const body = $('rankingBody');
+            renderCounter();
             if (!proposals.length) {
                 body.innerHTML = '<tr><td class="px-4 py-4 text-xs text-slate-500">Noch keine Vorschläge – sei der Erste!</td></tr>';
+                renderWinner();
                 return;
             }
             const voted = getVoted();
-            const sorted = [...proposals].sort((a, b) => b.votes - a.votes || a.row - b.row);
-            body.innerHTML = sorted.map((p, i) => {
+            const lockVotes = isEnded() || !isOnline();
+            body.innerHTML = sortedProposals().map((p, i) => {
                 const key = p.row + ':' + p.name;
                 const isVoted = !!voted[key];
                 const isNew = p.ts && (Date.now() - p.ts) < 24 * 60 * 60 * 1000;
@@ -272,7 +310,8 @@
                         ${meta ? `<div class="text-[11px] text-slate-500 mt-0.5 break-words">${meta}</div>` : ''}
                     </td>
                     <td class="pr-4 py-2.5 text-right w-16">
-                        <button data-row="${p.row}" data-name="${escapeHtml(p.name)}"
+                        <button data-row="${p.row}" data-name="${escapeHtml(p.name)}" ${lockVotes ? 'disabled' : ''}
+                            aria-pressed="${isVoted}" aria-label="Daumen für ${escapeHtml(p.name)}"
                             class="vote-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-semibold transition
                             ${isVoted ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-emerald-500'}">
                             👍 <span>${p.votes}</span>
@@ -280,26 +319,35 @@
                     </td>
                 </tr>`;
             }).join('');
+            renderWinner();
         }
 
         async function loadProposals() {
+            lastLoad = Date.now();
             try {
-                const r = await fetch(sheetApiUrl + '?action=list');
+                const r = await fetch(sheetApiUrl + '?action=list', { cache: 'no-store' });
                 const data = await r.json();
                 if (!Array.isArray(data.items)) throw new Error('Keine Liste erhalten');
                 proposals = data.items;
+                loaded = true;
                 renderRanking();
+                return true;
             } catch (e) {
                 if (!proposals.length) {
-                    document.getElementById('rankingBody').innerHTML =
+                    renderCounter();
+                    $('rankingBody').innerHTML =
                         '<tr><td class="px-4 py-4 text-xs text-slate-500">Vorschläge konnten nicht geladen werden.</td></tr>';
                 }
+                return false;
             }
         }
 
+        let voteBusy = false;
         async function toggleVote(row, name) {
+            if (voteBusy || isEnded() || !isOnline()) return;
             const p = proposals.find(x => x.row === row);
             if (!p) return;
+            voteBusy = true;
             const key = row + ':' + name;
             const voted = getVoted();
             const delta = voted[key] ? -1 : 1;
@@ -310,144 +358,218 @@
             try {
                 await fetch(sheetApiUrl, { method: 'POST', body: JSON.stringify({ action: 'vote', row: row, name: name, delta: delta }) });
             } catch (err) { console.error(err); }
+            voteBusy = false;
             loadProposals(); // echten Stand holen
         }
 
-        document.getElementById('rankingBody').addEventListener('click', function (e) {
+        $('rankingBody').addEventListener('click', e => {
             const btn = e.target.closest('.vote-btn');
-            if (btn) toggleVote(Number(btn.dataset.row), btn.dataset.name);
+            if (btn && !btn.disabled) toggleVote(Number(btn.dataset.row), btn.dataset.name);
         });
 
-        loadProposals();
-        // ===== Ende Ranking =====
+        /* ===== Enddatum, Countdown & Gewinner ===== */
+        function renderWinner() {
+            const box = $('winnerBox');
+            if (!isEnded() || !proposals.length) { box.classList.add('hidden'); return; }
+            const top = sortedProposals()[0];
+            $('winnerName').textContent = top.name;
+            box.classList.remove('hidden');
+        }
 
-        /* PATCH: Theme (Camper), Standard = dunkel */
+        function updateDeadline() {
+            if (!endDate || isNaN(endDate)) return;
+            const box = $('deadlineBox');
+            box.classList.remove('hidden');
+            box.classList.add('inline-flex');
+            if (isEnded()) {
+                $('deadlineText').textContent = 'Abstimmung beendet am ' + endDate.toLocaleDateString('de-DE');
+                form.classList.add('hidden');
+                $('shareLabel').textContent = 'Ergebnis teilen';
+                renderRanking();
+                return;
+            }
+            const ms = endDate - Date.now();
+            const d = Math.floor(ms / 86400000);
+            const h = Math.floor(ms / 3600000) % 24;
+            const m = Math.floor(ms / 60000) % 60;
+            const rest = d > 0 ? `${d} ${d === 1 ? 'Tag' : 'Tage'}, ${h} Std.` : (h > 0 ? `${h} Std., ${m} Min.` : `${m} Min.`);
+            $('deadlineText').textContent = `Abstimmung läuft noch ${rest} (bis ${endDate.toLocaleDateString('de-DE')})`;
+        }
+        updateDeadline();
+        if (endDate) setInterval(updateDeadline, 30000);
+
+        /* ===== Online/Offline ===== */
+        function updateOnline() {
+            const online = isOnline();
+            $('offlineBar').classList.toggle('hidden', online);
+            submitBtn.disabled = !online;
+            renderRanking();
+        }
+        window.addEventListener('online', () => { updateOnline(); loadProposals(); });
+        window.addEventListener('offline', updateOnline);
+
+        /* ===== Beim Zurückkehren in die App neu laden ===== */
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && isOnline() && Date.now() - lastLoad > 30000) loadProposals();
+        });
+
+        /* ===== Teilen ===== */
+        async function shareLink() {
+            const url = location.origin + location.pathname;
+            if (navigator.share) {
+                const text = isEnded() && proposals.length ? `Mein Camper heißt jetzt „${sortedProposals()[0].name}“! 🚐` : SHARE_TEXT;
+                try { await navigator.share({ title: 'Namenssuche für den Camper-Bus', text, url }); } catch (e) {}
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(SHARE_TEXT + ' ' + url);
+                const l = $('shareLabel'); const old = l.textContent;
+                l.textContent = 'Link kopiert ✓';
+                setTimeout(() => { l.textContent = old; }, 2000);
+            } catch (e) {
+                window.prompt('Link kopieren:', url);
+            }
+        }
+        $('shareBtn').addEventListener('click', shareLink);
+        $('shareBtn2').addEventListener('click', shareLink);
+
+        /* ===== Theme (Standard = dunkel) ===== */
         const THEME_KEY = 'camper_theme_v1';
         function applyTheme(t, save) {
             const light = t === 'light';
             document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
-            const m = document.querySelector('meta[name="theme-color"]');
-            if (m) m.setAttribute('content', light ? '#eef2f6' : '#09090b');
-            const b = document.getElementById('themeToggle');
-            if (b) {
-                b.innerHTML = light ? '🌙' : '☀️';
-                b.setAttribute('aria-pressed', light ? 'true' : 'false');
-                b.setAttribute('aria-label', light ? 'Zum dunklen Modus wechseln' : 'Zum hellen Modus wechseln');
-                b.setAttribute('title', light ? 'Dunklen Modus aktivieren' : 'Hellen Modus aktivieren');
-            }
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', light ? '#eef2f6' : '#09090b');
+            const b = $('themeToggle');
+            b.setAttribute('aria-pressed', light ? 'true' : 'false');
+            b.setAttribute('aria-label', light ? 'Zum dunklen Modus wechseln' : 'Zum hellen Modus wechseln');
+            b.setAttribute('title', light ? 'Dunklen Modus aktivieren' : 'Hellen Modus aktivieren');
             if (save) { try { localStorage.setItem(THEME_KEY, t); } catch (e) {} }
         }
-        (function () {
-            applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
-            const b = document.getElementById('themeToggle');
-            if (b) b.onclick = () => applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light', true);
-        })();
+        applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
+        $('themeToggle').addEventListener('click', () =>
+            applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light', true));
 
-        const form = document.getElementById('nicknameForm');
-        
-        // Modals
-        const loadingModal = document.getElementById('loadingModal');
-        const loadingModalContent = document.getElementById('loadingModalContent');
-        const successModal = document.getElementById('successModal');
-        const successModalContent = document.getElementById('successModalContent');
+        /* ===== Formular & Modals ===== */
+        const loadingModal = $('loadingModal');
+        const loadingModalContent = $('loadingModalContent');
+        const successModal = $('successModal');
+        const successModalContent = $('successModalContent');
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                "Spitzname": document.getElementById('nickname').value,
-                "VorgeschlagenVon": document.getElementById('author').value,
-                "Begruendung": document.getElementById('reason').value,
-                "Zeitpunkt": new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })
-            };
+        function showHint(el, text) {
+            el.textContent = text;
+            el.classList.toggle('hidden', !text);
+        }
 
-            // 1. Zufällige Dauer zwischen 4.0 und 5.0 Sekunden generieren
-            const randomDuration = (Math.random() * 1 + 4).toFixed(2); // z.B. 4.35s
-
-            // 2. Lade-Modal einblenden
+        function openLoading(durationS) {
             loadingModal.classList.remove('hidden');
             setTimeout(() => {
                 loadingModal.classList.remove('opacity-0');
                 loadingModalContent.classList.remove('scale-95');
-
-                // Erst NACHDEM das Modal sichtbar ist, exakte Breiten berechnen und Animation starten
-                const railTrack = document.getElementById('railTrack');
-                const carMover = document.getElementById('carMover');
-                const progressBar = document.getElementById('progressBar');
-                
-                const distance = railTrack.clientWidth - carMover.clientWidth - 8;
-
-                // CSS-Variablen setzen
-                carMover.style.setProperty('--car-distance', distance + 'px');
-                document.documentElement.style.setProperty('--anim-duration', randomDuration + 's');
-
-                // Animationen manuell triggern
+                const railTrack = $('railTrack'), carMover = $('carMover'), progressBar = $('progressBar');
+                carMover.style.setProperty('--car-distance', (railTrack.clientWidth - carMover.clientWidth - 8) + 'px');
+                document.documentElement.style.setProperty('--anim-duration', durationS + 's');
                 carMover.classList.add('animate-car-move');
                 progressBar.classList.add('animate-progress');
             }, 50);
+        }
 
-            let requestFinished = false;
-
-            function showSuccess() {
-                if (requestFinished) return;
-                requestFinished.true; // (korrigiert)
-                requestFinished = true;
-
-                // Lade-Modal sanft ausblenden
+        function closeLoading() {
+            return new Promise(res => {
                 loadingModal.classList.add('opacity-0');
                 loadingModalContent.classList.add('scale-95');
                 setTimeout(() => {
                     loadingModal.classList.add('hidden');
-                    
-                    // Animationen für den nächsten Durchlauf zurücksetzen
-                    const carMover = document.getElementById('carMover');
-                    const progressBar = document.getElementById('progressBar');
-                    carMover.classList.remove('animate-car-move');
-                    progressBar.classList.remove('animate-progress');
-
-                    // Success-Modal einblenden
-                    successModal.classList.remove('hidden');
-                    setTimeout(() => {
-                        successModal.classList.remove('opacity-0');
-                        successModalContent.classList.remove('scale-95');
-                    }, 10);
-                    fetchCounter();
-                    loadProposals();
+                    $('carMover').classList.remove('animate-car-move');
+                    $('progressBar').classList.remove('animate-progress');
+                    res();
                 }, 300);
-            }
-
-            // Daten im Hintergrund abschicken
-            fetch(sheetApiUrl, {
-                method: 'POST',
-                body: JSON.stringify(formData)
-            }).then(() => {
-                // Warten bis die Animation abgelaufen ist
-            }).catch(err => {
-                console.error(err);
             });
+        }
 
-            // Das Lade-Modal bleibt exakt so lange offen, wie die Animation dauert (4 bis 5 Sekunden)
-            const timeoutMs = parseFloat(randomDuration) * 1000;
+        function openSuccess() {
+            successModal.classList.remove('hidden');
             setTimeout(() => {
-                showSuccess();
-            }, timeoutMs);
-        });
+                successModal.classList.remove('opacity-0');
+                successModalContent.classList.remove('scale-95');
+            }, 10);
+        }
 
         function closeModal() {
             successModal.classList.add('opacity-0');
             successModalContent.classList.add('scale-95');
-            setTimeout(() => {
-                successModal.classList.add('hidden');
-            }, 300);
-
+            setTimeout(() => successModal.classList.add('hidden'), 300);
             form.reset();
-            document.getElementById('count-nickname').innerText = '0 / 40';
-            document.getElementById('count-author').innerText = '0 / 20';
-            document.getElementById('count-reason').innerText = '0 / 200';
-            
-            fetchCounter();
+            updateCount('nickname', 40); updateCount('author', 20); updateCount('reason', 200);
+        }
+        $('againBtn').addEventListener('click', closeModal);
+
+        // Hinweis bei bereits vorhandenem Namen schon beim Tippen
+        $('nickname').addEventListener('input', () => {
+            const n = normName($('nickname').value);
+            const dup = n && proposals.find(p => normName(p.name) === n);
+            showHint($('nicknameHint'), dup ? `„${dup.name}“ ist schon in der Liste – gib dort einfach deinen 👍 ab.` : '');
+        });
+
+        let submitting = false;
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            if (submitting) return;
+            showHint($('submitError'), '');
+
+            const name = $('nickname').value.trim().replace(/\s+/g, ' ');
+            if (!name) { showHint($('nicknameHint'), 'Bitte gib einen Namen ein.'); $('nickname').focus(); return; }
+            const dup = proposals.find(p => normName(p.name) === normName(name));
+            if (dup) { showHint($('nicknameHint'), `„${dup.name}“ ist schon in der Liste – gib dort einfach deinen 👍 ab.`); return; }
+            if (!isOnline()) { showHint($('submitError'), 'Du bist offline. Bitte versuche es wieder, sobald du Netz hast.'); return; }
+            if (isEnded()) return;
+
+            submitting = true;
+            submitBtn.disabled = true;
+
+            const formData = {
+                "Spitzname": name,
+                "VorgeschlagenVon": $('author').value.trim(),
+                "Begruendung": $('reason').value.trim(),
+                "Zeitpunkt": new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })
+            };
+
+            const duration = (Math.random() * 1 + 4).toFixed(2); // 4–5 s
+            openLoading(duration);
+            const minWait = new Promise(r => setTimeout(r, parseFloat(duration) * 1000));
+
+            // Absenden. Klappt die Antwort nicht (z. B. CORS), prüfen wir anhand der Liste, ob der Name angekommen ist.
+            const send = fetch(sheetApiUrl, { method: 'POST', body: JSON.stringify(formData) })
+                .then(() => true)
+                .catch(async () => {
+                    if (!isOnline()) return false;
+                    await new Promise(r => setTimeout(r, 1500));
+                    await loadProposals();
+                    return proposals.some(p => normName(p.name) === normName(name));
+                });
+
+            const [ok] = await Promise.all([send, minWait]);
+            await closeLoading();
+            submitting = false;
+            submitBtn.disabled = !isOnline();
+
+            if (ok) {
+                openSuccess();
+                loadProposals();
+            } else {
+                showHint($('submitError'), 'Dein Vorschlag konnte nicht gesendet werden. Bitte prüfe deine Verbindung und versuche es nochmal – dein Text bleibt erhalten.');
+            }
+        });
+
+        /* ===== Start ===== */
+        renderCounter();
+        updateOnline();
+        loadProposals();
+
+        /* ===== PWA ===== */
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
         }
     </script>
-<script>/* PATCH: PWA */if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(){});});}</script>
 </body>
 </html>
