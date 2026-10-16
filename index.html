@@ -7,8 +7,8 @@
     <!-- PRIVATSPHÄRE-OPTIMIERUNGEN -->
     <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="referrer" content="no-referrer">
-    <meta name="theme-color" content="#09090b">
-    <script>/* Theme früh laden, Standard = dunkel */(function(){try{if(localStorage.getItem('camper_theme_v1')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();</script>
+    <meta name="theme-color" content="#eef2f6">
+    <script>/* Theme früh laden, Standard = hell (gespeicherte Wahl bleibt erhalten) */(function(){var t='light';try{if(localStorage.getItem('camper_theme_v1')==='dark'){t='dark';}}catch(e){}document.documentElement.setAttribute('data-theme',t);if(t==='dark'){var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#000000');}})();</script>
 
     <title>Namenssuche für den Camper-Bus</title>
 
@@ -51,7 +51,21 @@
 
         button:disabled { opacity: .55; cursor: not-allowed; }
 
-        /* Heller Modus */
+        /* Dunkler Modus, AMOLED-optimiert: echtes Schwarz, Flächen nur leicht abgehoben */
+        :root[data-theme="dark"] { color-scheme: dark; }
+        :root[data-theme="dark"] body.bg-slate-950, :root[data-theme="dark"] .bg-slate-950 { background-color: #000000; }
+        :root[data-theme="dark"] .bg-slate-900 { background-color: #0b0b0c; }
+        :root[data-theme="dark"] .bg-slate-900\/90 { background-color: rgba(11, 11, 12, .92); }
+        :root[data-theme="dark"] .bg-slate-950\/80 { background-color: rgba(0, 0, 0, .85); }
+        :root[data-theme="dark"] .border-slate-800 { border-color: #27272a; }
+        :root[data-theme="dark"] .border-slate-800\/70 { border-color: #1c1c1f; }
+        :root[data-theme="dark"] .text-slate-100 { color: #f4f4f5; }
+        :root[data-theme="dark"] .text-slate-500 { color: #8b8b94; }
+        :root[data-theme="dark"] .placeholder-slate-600::placeholder { color: #6b6b74; }
+        :root[data-theme="dark"] .hover\:border-emerald-500:hover, :root[data-theme="dark"] .focus\:border-emerald-500:focus { border-color: #10b981; }
+
+        /* Heller Modus (Standard) */
+        :root[data-theme="light"] { color-scheme: light; }
         :root[data-theme="light"] body.bg-slate-950 { background-color: #eef2f6; }
         :root[data-theme="light"] .text-slate-100, :root[data-theme="light"] .text-white { color: #0f172a; }
         :root[data-theme="light"] .text-slate-300 { color: #334155; }
@@ -66,7 +80,7 @@
         :root[data-theme="light"] .border-slate-800 { border-color: #cbd5e1; }
         :root[data-theme="light"] .border-slate-800\/70 { border-color: #e2e8f0; }
         :root[data-theme="light"] .placeholder-slate-600::placeholder { color: #94a3b8; }
-        :root[data-theme="light"] .hover\:border-emerald-500:hover { border-color: #10b981; }
+        :root[data-theme="light"] .hover\:border-emerald-500:hover, :root[data-theme="light"] .focus\:border-emerald-500:focus { border-color: #10b981; }
         :root[data-theme="light"] .bg-emerald-600.text-white { color: #ffffff; }
         :root[data-theme="light"] .bg-emerald-600 .text-white { color: #ffffff; }
     </style>
@@ -91,7 +105,7 @@
                 </span>
                 <span id="counterValue">…</span> Vorschläge
             </div>
-            <button id="themeToggle" type="button" aria-label="Zum hellen Modus wechseln" title="Hellen Modus aktivieren"
+            <button id="themeToggle" type="button" aria-label="Zum dunklen Modus wechseln" title="Dunklen Modus aktivieren"
                 class="theme-toggle flex items-center justify-center text-slate-300 bg-slate-900 border border-slate-800 rounded-xl shadow-sm hover:border-emerald-500 transition">
                 <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
                 <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -433,20 +447,20 @@
         $('shareBtn').addEventListener('click', shareLink);
         $('shareBtn2').addEventListener('click', shareLink);
 
-        /* ===== Theme (Standard = dunkel) ===== */
+        /* ===== Theme (Standard = hell) ===== */
         const THEME_KEY = 'camper_theme_v1';
         function applyTheme(t, save) {
             const light = t === 'light';
             document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
             const meta = document.querySelector('meta[name="theme-color"]');
-            if (meta) meta.setAttribute('content', light ? '#eef2f6' : '#09090b');
+            if (meta) meta.setAttribute('content', light ? '#eef2f6' : '#000000');
             const b = $('themeToggle');
             b.setAttribute('aria-pressed', light ? 'true' : 'false');
             b.setAttribute('aria-label', light ? 'Zum dunklen Modus wechseln' : 'Zum hellen Modus wechseln');
             b.setAttribute('title', light ? 'Dunklen Modus aktivieren' : 'Hellen Modus aktivieren');
             if (save) { try { localStorage.setItem(THEME_KEY, t); } catch (e) {} }
         }
-        applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
+        applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light', false);
         $('themeToggle').addEventListener('click', () =>
             applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light', true));
 
