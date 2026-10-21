@@ -1,7 +1,7 @@
 /* Namenssuche für den Camper-Bus – Service Worker
    Bei Änderungen an Dateien die Versionsnummer (V) hochzählen. */
-const P="campernamen-",V=P+"v4";
-const CORE=['./','index.html','manifest.json','icon.svg','icon-192.png','icon-512.png','apple-touch-icon.png','logo.jpg'];
+const P="campernamen-",V=P+"v5";
+const CORE=['./','index.html','shared/ios-nav.js','manifest.json','icon.svg','icon-192.png','icon-512.png','apple-touch-icon.png','logo.jpg'];
 const EXTRA=["https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"];
 const RULES=[["fonts.googleapis.com|fonts.gstatic.com","cf"],["script.google.com|script.googleusercontent.com","nf"]];
 const NET_TIMEOUT=8000; // Apps Script braucht manchmal etwas länger
