@@ -1,9 +1,9 @@
 /* Namenssuche für den Camper-Bus – Service Worker
    Bei Änderungen an Dateien die Versionsnummer (V) hochzählen. */
-const P="campernamen-",V=P+"v5";
+const P="campernamen-",V=P+"v6";
 const CORE=['./','index.html','shared/ios-nav.js','manifest.json','icon.svg','icon-192.png','icon-512.png','apple-touch-icon.png','logo.jpg'];
-const EXTRA=["https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"];
-const RULES=[["fonts.googleapis.com|fonts.gstatic.com","cf"],["script.google.com|script.googleusercontent.com","nf"]];
+const EXTRA=[];
+const RULES=[["script.google.com|script.googleusercontent.com","nf"]];
 const NET_TIMEOUT=8000; // Apps Script braucht manchmal etwas länger
 self.addEventListener('install',e=>{e.waitUntil((async()=>{const c=await caches.open(V);await c.addAll(CORE);await Promise.allSettled(EXTRA.map(u=>c.add(u)));await self.skipWaiting();})());});
 self.addEventListener('activate',e=>{e.waitUntil((async()=>{for(const k of await caches.keys())if(k.startsWith(P)&&k!==V)await caches.delete(k);await self.clients.claim();})());});

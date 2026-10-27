@@ -2,12 +2,12 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
     <!-- PRIVATSPHÄRE-OPTIMIERUNGEN -->
     <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="referrer" content="no-referrer">
-    <meta name="theme-color" content="#047857">
+    <meta name="theme-color" content="#f2f2f7">
     <script>(function(){try{if(localStorage.getItem('camper_theme_v1')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
 
     <title>Namenssuche für den Camper-Bus</title>
@@ -21,163 +21,211 @@
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Camper-Namen">
-
-    <!-- Schriftart (Plus Jakarta Sans, wie TravelBase und Quest Log) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    /* Gleiches Grundgerüst wie TravelBase und Quest Log, eigene Akzentfarbe (Smaragdgrün wie das App-Icon) */
+    /* Apple-Designsprache wie „Zuhause“ und das mvs2-Dashboard: Systemschrift, Linien-Symbole,
+       eigener Akzent Koralle (Abendrot am Lagerfeuer) */
     :root {
-        --bg: #f3f7f5; --card: #fff; --hover: #ecfdf5; --line: #cbd5e1; --ink: #0f172a; --text: #334155; --mute: #64748b;
-        --p1: #047857; --p1-soft: #d1fae5; --p1-line: #6ee7b7; --gold: #b45309; --gold-soft: #fef3c7; --gold-line: #fde68a;
-        --danger: #dc2626; --danger-soft: #fee2e2; --radius: 14px; --shadow: 0 4px 12px rgba(15, 23, 42, .05);
+        --bg: #f2f2f7; --card: #fff; --well: #f2f2f7; --hover: #e9e9ef; --line: #e2e2e7; --sep: rgba(60, 60, 67, .14);
+        --ink: #1c1c1e; --text: #3a3a3c; --mute: #6c6c70;
+        --p1: #c8402a; --p1-soft: #fdeeea; --p1-line: #f4b8aa; --on-p1: #fff;
+        --gold: #9a5b00; --gold-soft: #fff2d6; --gold-line: #f6d58f;
+        --medal: #e8a200; --silver: #8e8e93; --bronze: #a0632f;
+        --danger: #d70015; --danger-soft: #ffe6e8;
+        --radius: 18px; --radius-s: 12px; --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .04);
+        --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        color-scheme: light;
     }
     :root[data-theme="dark"] {
-        /* Für AMOLED-Displays: echtes Schwarz als Hintergrund, Flächen nur knapp darüber */
-        color-scheme: dark; --bg: #000; --card: #0a0d0c; --hover: #111a16; --line: #1f2925; --ink: #e8f0ec; --text: #c3cfc8; --mute: #92a39a;
-        --p1: #34d399; --p1-soft: #0d2a20; --p1-line: #1e5a43; --gold: #fcd34d; --gold-soft: #241d07; --gold-line: #5c4a14;
-        --danger: #f87171; --danger-soft: #2a0e0e; --shadow: none;
+        color-scheme: dark; --bg: #000; --card: #1c1c1e; --well: #2c2c2e; --hover: #3a3a3c; --line: #38383a; --sep: rgba(84, 84, 88, .55);
+        --ink: #f5f5f7; --text: #d1d1d6; --mute: #98989f;
+        --p1: #ff7a5c; --p1-soft: #3a1710; --p1-line: #7a3424; --on-p1: #2a0a04;
+        --gold: #ffd60a; --gold-soft: #302805; --gold-line: #5c4a14;
+        --medal: #ffd60a; --silver: #aeaeb2; --bronze: #d4a373;
+        --danger: #ff6961; --danger-soft: #3a1412; --shadow: none;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 0 24px 48px; min-height: 100vh; }
-    button, input, textarea { font: inherit; }
-    button { cursor: pointer; }
-    button:disabled { opacity: .55; cursor: not-allowed; }
-    :focus-visible { outline: 3px solid var(--p1); outline-offset: 2px; }
-    ::selection { background: var(--p1); color: #fff; }
-    .wrap { max-width: 640px; margin: 0 auto; }
+    * { box-sizing: border-box; }
     .hidden, [hidden] { display: none !important; }
+    html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+    body { margin: 0; font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.45; letter-spacing: -.005em;
+        -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; min-height: 100vh;
+        padding: 0 max(16px, env(safe-area-inset-right, 0px)) calc(32px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+    body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 45; background: var(--bg); }
+    h1, h2, p { margin: 0; }
+    button, input, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    :focus-visible { outline: 2px solid var(--p1); outline-offset: 2px; }
+    ::selection { background: var(--p1-line); color: var(--ink); }
+    .ic { width: 1.25em; height: 1.25em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: -.25em; }
+    .wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Kopfzeile */
-    .sticky-header { position: sticky; top: 0; z-index: 40; background: var(--bg); padding: 14px 0 12px; margin-bottom: 24px; border-bottom: 3px solid var(--p1); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    h1 { font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 800; letter-spacing: -.025em; color: var(--ink); line-height: 1.15; }
-    .sub { font-size: .9rem; font-weight: 600; color: var(--mute); }
-    .header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
-    .icon-btn { background: var(--card); border: 2px solid var(--line); border-radius: 10px; font-size: 1.3rem; padding: 7px 11px; line-height: 1; color: var(--ink); box-shadow: var(--shadow); }
-    .icon-btn:hover { background: var(--hover); border-color: var(--p1); }
-    .count-pill { display: flex; align-items: center; gap: 6px; background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 7px 11px; font-size: .84rem; font-weight: 800; color: var(--p1); line-height: 1.3; box-shadow: var(--shadow); white-space: nowrap; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--p1); flex: 0 0 auto; animation: pulse 2s ease-in-out infinite; }
+    /* Kopf: klein, ruhig, Systemmaterial beim Scrollen */
+    .sticky-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; padding-block: 12px 10px; margin-inline: -4px; padding-inline: 4px;
+        background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: saturate(1.8) blur(18px); backdrop-filter: saturate(1.8) blur(18px);
+        display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+    .title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .app-ic { width: 36px; height: 36px; border-radius: 9px; flex: none; display: block; }
+    h1 { font-size: 22px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sub { font-size: 12px; font-weight: 500; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .icon-btn { background: var(--card); border: 0; border-radius: 50%; width: 36px; height: 36px; display: inline-grid; place-items: center; color: var(--ink); box-shadow: var(--shadow); }
+    .icon-btn:hover { background: var(--hover); }
+    .icon-btn .ic { width: 18px; height: 18px; }
+    .count-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border-radius: 999px; padding: 0 12px; height: 36px; font-size: 13px; font-weight: 600; color: var(--ink); box-shadow: var(--shadow); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--p1); flex: none; animation: pulse 2s ease-in-out infinite; }
     @keyframes pulse { 50% { opacity: .35; } }
 
     /* Karten & Hinweise */
-    .box { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; margin-bottom: 20px; box-shadow: var(--shadow); }
-    .box h2 { font-size: 1.1rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
-    .note { font-size: .84rem; color: var(--mute); }
-    .msg { font-size: .84rem; font-weight: 600; border-radius: 8px; padding: 8px 12px; }
+    .box { background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); min-width: 0; }
+    .box h2 { font-size: 16px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+    .box h2 .ic { color: var(--p1); }
+    .note { font-size: 13px; color: var(--mute); display: inline-flex; align-items: center; gap: 4px; }
+    .note .ic { width: 14px; height: 14px; }
+    .msg { font-size: 13px; font-weight: 500; border-radius: 10px; padding: 9px 12px; }
     .msg.err { background: var(--danger-soft); color: var(--danger); }
-    .banner { background: var(--gold-soft); color: #92400e; border: 1px solid var(--gold-line); border-radius: 10px; padding: 9px 14px; font-size: .84rem; font-weight: 600; margin-bottom: 16px; }
-    :root[data-theme="dark"] .banner { color: #fcd34d; }
+    .banner { display: flex; align-items: flex-start; gap: 8px; background: var(--gold-soft); color: var(--gold); border-radius: var(--radius-s); padding: 10px 14px; font-size: 13px; font-weight: 500; }
+    .banner .ic { width: 16px; height: 16px; margin-top: 1px; }
 
     /* Titelbereich mit Camper-Foto */
     .hero { text-align: center; margin-bottom: 18px; }
-    .hero-img { display: inline-block; padding: 6px; background: var(--bg); border: 1px solid var(--line); border-radius: 18px; margin-bottom: 12px; }
-    .hero-img img { display: block; width: 176px; height: 176px; object-fit: cover; border-radius: 12px; }
-    .hero h2 { font-size: 1.35rem; letter-spacing: -.02em; }
-    .hero p { max-width: 380px; margin: 4px auto 0; font-size: .9rem; }
-    .chip { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 800; border-radius: 999px; padding: 4px 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
-    .chip.deadline { margin-top: 12px; background: var(--gold-soft); border-color: var(--gold-line); color: var(--gold); }
-    .chip.new { font-size: .62rem; padding: 1px 7px; margin-left: 4px; vertical-align: middle; text-transform: uppercase; letter-spacing: .05em; background: var(--p1-soft); border-color: var(--p1-line); color: var(--p1); }
+    .hero-img img { display: block; width: 168px; height: 168px; object-fit: cover; border-radius: 22px; margin: 4px auto 14px; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08); }
+    .hero h2 { display: block; font-size: 20px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; }
+    .hero p { max-width: 360px; margin: 6px auto 0; color: var(--mute); }
+    .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 4px 11px; background: var(--well); color: var(--mute); }
+    .chip .ic { width: 14px; height: 14px; }
+    .chip.deadline { margin-top: 12px; text-align: left; border-radius: 12px; background: var(--gold-soft); color: var(--gold); font-variant-numeric: tabular-nums; }
+    .chip.new { font-size: 11px; padding: 1px 7px; margin-left: 6px; vertical-align: 1px; background: var(--p1-soft); color: var(--p1); }
 
-    .winner { text-align: center; margin-bottom: 18px; padding: 14px; border-radius: 10px; background: var(--p1-soft); border: 1px solid var(--p1-line); }
-    .winner small { display: block; font-size: .78rem; font-weight: 700; color: var(--p1); }
-    .winner b { display: block; font-size: 1.4rem; font-weight: 800; color: var(--ink); margin-top: 2px; }
+    .winner { text-align: center; margin-bottom: 18px; padding: 14px; border-radius: var(--radius-s); background: var(--p1-soft); }
+    .winner small { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--p1); }
+    .winner b { display: block; font-size: 20px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); margin-top: 2px; }
 
-    /* Formular */
-    form { display: flex; flex-direction: column; gap: 12px; }
-    .field-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 4px; }
-    label { font-size: .78rem; font-weight: 700; color: var(--mute); }
-    .counter { font-size: .74rem; font-weight: 600; color: var(--mute); }
-    .counter.full { color: var(--gold); }
-    input[type=text], textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 11px 13px; font-size: 16px; color: var(--ink); }
-    textarea { resize: none; line-height: 1.5; }
-    input::placeholder, textarea::placeholder { color: var(--mute); opacity: .7; }
-    input:focus, textarea:focus { border-color: var(--p1-line); outline: 3px solid rgba(4,120,87,.15); }
-    .hint { font-size: .8rem; font-weight: 600; color: var(--gold); margin-top: 4px; }
-    .btn { width: 100%; background: var(--p1); color: #fff; border: 2px solid var(--p1); border-radius: 10px; padding: 11px 18px; font-weight: 800; font-size: .95rem; }
-    .btn:hover:not(:disabled) { filter: brightness(.95); }
-    :root[data-theme="dark"] .btn { color: #022c22; }
-    .btn-ghost { width: 100%; background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-weight: 700; font-size: .9rem; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-ghost:hover { background: var(--hover); border-color: var(--p1); }
-    .privacy { font-size: .78rem; color: var(--mute); text-align: center; }
+    /* Formular: gruppiert wie iOS-Einstellungen */
+    form { display: flex; flex-direction: column; gap: 14px; margin: 0; }
+    .field-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 0 2px 6px; }
+    label { font-size: 13px; font-weight: 500; color: var(--mute); }
+    .counter { font-size: 12px; color: var(--mute); font-variant-numeric: tabular-nums; }
+    .counter.full { color: var(--gold); font-weight: 600; }
+    input[type=text], textarea { width: 100%; background: var(--well); border: 1px solid transparent; border-radius: 10px; padding: 10px 12px; font-size: 16px; line-height: 1.35; color: var(--ink); -webkit-appearance: none; appearance: none; }
+    textarea { resize: none; display: block; }
+    input::placeholder, textarea::placeholder { color: var(--mute); opacity: .8; }
+    input:focus, textarea:focus { outline: none; background: var(--card); border-color: var(--p1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--p1) 22%, transparent); }
+    .hint { font-size: 13px; font-weight: 500; color: var(--gold); margin: 6px 2px 0; }
+    .btn { width: 100%; background: var(--p1); color: var(--on-p1); border: 0; border-radius: 12px; padding: 11px 16px; min-height: 44px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:hover:not(:disabled) { filter: brightness(1.06); }
+    .btn:active:not(:disabled) { transform: scale(.98); }
+    .btn .ic { width: 18px; height: 18px; }
+    .btn-ghost { width: 100%; background: var(--card); color: var(--p1); border: 0; border-radius: 12px; padding: 10px 14px; min-height: 44px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-ghost:hover { background: var(--hover); }
+    .btn-ghost .ic { width: 18px; height: 18px; }
+    .privacy { display: flex; gap: 6px; align-items: flex-start; justify-content: center; font-size: 12px; color: var(--mute); text-align: left; max-width: 440px; margin: 0 auto; }
+    .privacy .ic { width: 14px; height: 14px; margin-top: 1px; }
 
     /* Rangliste */
-    .rank-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+    .rank-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
     .rank { width: 100%; border-collapse: collapse; }
-    .rank td { padding: 10px 0; border-top: 1px solid var(--line); vertical-align: middle; }
+    .rank td { padding: 10px 0; border-top: .5px solid var(--sep); vertical-align: middle; }
     .rank tr:first-child td { border-top: 0; }
-    .rank .pos { width: 40px; font-size: 1rem; font-weight: 800; color: var(--mute); }
-    .rank .name { font-weight: 800; color: var(--ink); overflow-wrap: anywhere; }
-    .rank .why { font-size: .84rem; color: var(--mute); margin-top: 2px; overflow-wrap: anywhere; }
-    .rank .act { width: 72px; text-align: right; padding-left: 8px; }
-    .rank .empty { font-size: .88rem; color: var(--mute); }
-    .vote-btn { display: inline-flex; align-items: center; gap: 4px; font-size: .84rem; font-weight: 800; border-radius: 999px; padding: 4px 11px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
-    .vote-btn:not(.on):hover:not(:disabled) { border-color: var(--p1); background: var(--hover); }
-    .vote-btn.on { background: var(--p1); border-color: var(--p1); color: #fff; }
-    :root[data-theme="dark"] .vote-btn.on { color: #022c22; }
+    .rank .pos { width: 40px; }
+    .medal { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-size: 13px; font-weight: 600; color: var(--mute); background: var(--well); font-variant-numeric: tabular-nums; }
+    .medal.m1 { background: var(--medal); color: #fff; }
+    .medal.m2 { background: var(--silver); color: #fff; }
+    .medal.m3 { background: var(--bronze); color: #fff; }
+    :root[data-theme="dark"] .medal.m1 { color: #2a2000; }
+    :root[data-theme="dark"] .medal.m2, :root[data-theme="dark"] .medal.m3 { color: #1c1c1e; }
+    .rank .name { font-size: 14px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+    .rank .why { font-size: 13px; color: var(--mute); margin-top: 1px; overflow-wrap: anywhere; }
+    .rank .act { width: 76px; text-align: right; padding-left: 8px; }
+    .rank .empty { font-size: 14px; color: var(--mute); padding: 14px 0; }
+    .vote-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 32px; font-size: 13px; font-weight: 600; border-radius: 999px; padding: 4px 12px; border: 0; background: var(--well); color: var(--ink); font-variant-numeric: tabular-nums; }
+    .vote-btn .ic { width: 15px; height: 15px; }
+    .vote-btn:not(.on):hover:not(:disabled) { background: var(--hover); }
+    .vote-btn.on { background: var(--p1); color: var(--on-p1); }
+    .vote-btn.on .ic { fill: currentColor; fill-opacity: .25; }
 
-    /* Modals */
-    .overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(15, 23, 42, .45); transition: opacity .3s; }
-    :root[data-theme="dark"] .overlay { background: rgba(0, 0, 0, .8); }
+    /* Dialoge */
+    .overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, .32); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: opacity .3s; }
+    :root[data-theme="dark"] .overlay { background: rgba(0, 0, 0, .6); }
     .overlay.opacity-0 { opacity: 0; }
-    .modal { width: 100%; max-width: 330px; text-align: center; margin: 0; transition: transform .3s; }
+    .modal { width: 100%; max-width: 320px; text-align: center; margin: 0; padding: 22px 18px 18px; border-radius: 22px; box-shadow: 0 10px 40px rgba(0,0,0,.2); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
     .modal.scale-95 { transform: scale(.95); }
-    .modal-icon { display: inline-grid; place-items: center; width: 56px; height: 56px; font-size: 1.6rem; border-radius: 12px; background: var(--p1-soft); border: 1px solid var(--p1-line); margin-bottom: 12px; }
-    .modal .note { margin: 4px 0 18px; }
-    .modal .btn-ghost { margin-top: 8px; }
-    .rail { position: relative; height: 34px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; align-items: center; }
+    .modal h2 { display: block; }
+    .modal-icon { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--p1-soft); color: var(--p1); margin-bottom: 12px; }
+    .modal-icon .ic { width: 28px; height: 28px; }
+    .modal .note { display: block; margin: 4px 0 18px; }
+    .modal .btn-ghost { margin-top: 8px; box-shadow: none; background: var(--well); }
+    .rail { position: relative; height: 34px; background: var(--well); border-radius: 10px; overflow: hidden; display: flex; align-items: center; }
     #progressBar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--p1-soft); }
-    #carMover { position: absolute; left: 4px; font-size: 1.05rem; z-index: 1; }
+    #carMover { position: absolute; left: 4px; z-index: 1; display: grid; place-items: center; color: var(--p1); }
+    #carMover .ic { width: 24px; height: 24px; display: block; }
     @keyframes fillBar { 0% { width: 0%; } 100% { width: 100%; } }
     .animate-progress { animation: fillBar var(--anim-duration, 4.5s) linear forwards; }
     @keyframes driveCar { 0% { transform: translateX(0px); } 100% { transform: translateX(var(--car-distance, 240px)); } }
     .animate-car-move { animation: driveCar var(--anim-duration, 4.5s) linear forwards; }
 
-    @media (max-width: 760px) {
-        body { padding: 0 10px 28px; }
-        .sticky-header { padding: 10px 0 8px; margin-bottom: 14px; }
-        .box { padding: 16px; border-radius: 10px; }
-        .hero-img img { width: 144px; height: 144px; }
-    }
     @media (max-width: 420px) {
-        .sub { font-size: .8rem; }
-        .count-pill { padding: 7px 10px; }
+        h1 { font-size: 20px; }
+        .app-ic { display: none; }
+        .count-pill { padding: 0 10px; }
         .pill-word { display: none; }
+        .hero-img img { width: 144px; height: 144px; border-radius: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .dot { animation: none; }
+        .overlay, .modal { transition: none; }
     }
 </style>
 <script src="shared/ios-nav.js" defer></script>
 </head>
 <body>
+<!-- Linien-Symbole (SF-Symbols-Stil) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-van" viewBox="0 0 24 24"><path d="M3 16.5V9a2 2 0 0 1 2-2h10.5a2 2 0 0 1 1.5.7l3.5 4.1c.3.4.5.8.5 1.3v3.4a1 1 0 0 1-1 1h-1"/><path d="M5 7.2 6.4 4.5h8.4L16 7"/><path d="M14 7v4.5h6.6"/><path d="M3 11.5h8"/><path d="M9.5 17.5h5"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/><path d="M3 16.5v1h2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 4.3-2.5M19 12.9a10 10 0 0 0-2.2-1.6"/><path d="M2 9.3a15 15 0 0 1 4.2-2.6M22 9.3A15 15 0 0 0 11 5.1"/><path d="M12 20h.01"/></symbol>
+    <symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M6.5 3h11M6.5 21h11"/><path d="M7.5 3c0 4.5 4.5 6 4.5 9s-4.5 4.5-4.5 9M16.5 3c0 4.5-4.5 6-4.5 9s4.5 4.5 4.5 9"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21.5 2.5 10.5 13.5"/><path d="M21.5 2.5 14.5 21.5l-4-8-8-4z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M8 11H6.5a2 2 0 0 0-2 2v6.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V13a2 2 0 0 0-2-2H16"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7.5 4h9v5a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 6H4.5v1.5A3 3 0 0 0 7.6 10.5M16.5 6h3v1.5a3 3 0 0 1-3.1 3"/><path d="M12 13.5V17M8.5 20.5h7M9.5 20.5c0-2 1-3.5 2.5-3.5s2.5 1.5 2.5 3.5"/></symbol>
+    <symbol id="i-thumb" viewBox="0 0 24 24"><path d="M7.5 10.5v10h-3a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1z"/><path d="M7.5 10.5 11 3.5a2.3 2.3 0 0 1 2.3 2.6l-.6 3.4h5.6a2 2 0 0 1 2 2.4l-1.3 6.6a2.5 2.5 0 0 1-2.5 2H7.5"/></symbol>
+    <symbol id="i-party" viewBox="0 0 24 24"><path d="M4 20 8.5 8.5l7 7z"/><path d="M6.3 14.2 9.8 17.7"/><path d="M13 4.5c.6 1 .6 2.3 0 3.3M18.5 11c-1-.6-2.3-.6-3.3 0"/><path d="M15 3h.01M21 9h.01M19 4.5l-2 2M20 15h.01"/></symbol>
+</svg>
 <div class="wrap">
     <header class="sticky-header">
-        <div>
-            <h1>🚐 Camper-Namen</h1>
-            <div class="sub">Ford Tourneo Connect · Namenssuche</div>
+        <div class="title">
+            <img class="app-ic" src="icon.svg" alt="" width="36" height="36">
+            <div style="min-width:0">
+                <h1>Camper-Namen</h1>
+                <div class="sub">Ford Tourneo Connect · Namenssuche</div>
+            </div>
         </div>
         <div class="header-actions">
             <div class="count-pill" title="Anzahl der Vorschläge"><span class="dot" aria-hidden="true"></span><span><span id="counterValue">…</span><span class="pill-word"> Vorschläge</span></span></div>
-            <button id="themeToggle" class="icon-btn" type="button" aria-label="Zum dunklen Modus wechseln">🌙</button>
+            <button id="themeToggle" class="icon-btn" type="button" aria-label="Zum dunklen Modus wechseln"><svg class="ic"><use href="#i-moon"/></svg></button>
         </div>
     </header>
 
     <!-- Offline-Hinweis -->
-    <div id="offlineBar" class="banner hidden">📴 Offline – Vorschläge werden angezeigt, Absenden &amp; Abstimmen geht erst wieder mit Netz.</div>
+    <div id="offlineBar" class="banner hidden"><svg class="ic"><use href="#i-offline"/></svg><span>Offline – Vorschläge werden angezeigt, Absenden &amp; Abstimmen geht erst wieder mit Netz.</span></div>
 
-    <main>
+    <main class="wrap" style="width:100%">
         <div class="box">
             <!-- Titel-Bereich mit Camper-Foto -->
             <div class="hero">
-                <div class="hero-img"><img src="logo.jpg" alt="Mein Camper" width="176" height="176"></div>
+                <div class="hero-img"><img src="logo.jpg" alt="Mein Camper" width="168" height="168"></div>
                 <h2>Wie soll mein Camper heißen?</h2>
                 <p>Campingbox &amp; Dachzelt sind bereit. Welcher Spitzname passt perfekt?</p>
                 <!-- Countdown / Enddatum (nur sichtbar, wenn VOTING_END gesetzt ist) -->
-                <div id="deadlineBox" class="chip deadline hidden">⏳ <span id="deadlineText"></span></div>
+                <div id="deadlineBox" class="chip deadline hidden"><svg class="ic"><use href="#i-hourglass"/></svg><span id="deadlineText"></span></div>
             </div>
 
             <!-- Gewinner (nur nach Ende der Abstimmung) -->
             <div id="winnerBox" class="winner hidden">
-                <small>Die Abstimmung ist beendet – der Camper heißt</small>
+                <small><svg class="ic"><use href="#i-trophy"/></svg>Die Abstimmung ist beendet – der Camper heißt</small>
                 <b id="winnerName"></b>
             </div>
 
@@ -211,20 +259,20 @@
                 <!-- Fehlermeldung beim Absenden -->
                 <p id="submitError" class="msg err hidden"></p>
 
-                <button type="submit" id="submitBtn" class="btn">Vorschlag abschicken 🚀</button>
+                <button type="submit" id="submitBtn" class="btn"><svg class="ic"><use href="#i-send"/></svg>Vorschlag abschicken</button>
 
-                <p class="privacy">🔒 Dein Name ist nur für mich sichtbar und erscheint nicht in der Liste. Vorschläge werden in einer privaten Google-Tabelle gespeichert.</p>
+                <p class="privacy"><svg class="ic"><use href="#i-lock"/></svg><span>Dein Name ist nur für mich sichtbar und erscheint nicht in der Liste. Vorschläge werden in einer privaten Google-Tabelle gespeichert.</span></p>
             </form>
         </div>
 
         <!-- Teilen -->
-        <button id="shareBtn" type="button" class="btn-ghost" style="margin-bottom: 20px">📤 <span id="shareLabel">Link teilen &amp; Freunde abstimmen lassen</span></button>
+        <button id="shareBtn" type="button" class="btn-ghost"><svg class="ic"><use href="#i-share"/></svg><span id="shareLabel">Link teilen &amp; Freunde abstimmen lassen</span></button>
 
         <!-- Rangliste -->
         <section class="box">
             <div class="rank-head">
-                <h2>🏆 Aktuelle Vorschläge</h2>
-                <span class="note">Sortiert nach 👍</span>
+                <h2><svg class="ic"><use href="#i-trophy"/></svg>Aktuelle Vorschläge</h2>
+                <span class="note">Sortiert nach <svg class="ic" aria-label="Daumen"><use href="#i-thumb"/></svg></span>
             </div>
             <table class="rank">
                 <tbody id="rankingBody">
@@ -238,12 +286,12 @@
 <!-- LADE-MODAL -->
 <div id="loadingModal" class="overlay hidden opacity-0">
     <div class="box modal scale-95" id="loadingModalContent">
-        <div class="modal-icon">🚐</div>
+        <div class="modal-icon"><svg class="ic"><use href="#i-van"/></svg></div>
         <h2>Vorschlag wird übermittelt …</h2>
         <p class="note">Packe die Campingbox ein und fahre ab!</p>
         <div id="railTrack" class="rail">
             <div id="progressBar"></div>
-            <div id="carMover">🚐</div>
+            <div id="carMover"><svg class="ic"><use href="#i-van"/></svg></div>
         </div>
     </div>
 </div>
@@ -251,11 +299,11 @@
 <!-- SUCCESS-MODAL -->
 <div id="successModal" class="overlay hidden opacity-0">
     <div class="box modal scale-95" id="successModalContent">
-        <div class="modal-icon">🎉</div>
+        <div class="modal-icon"><svg class="ic"><use href="#i-party"/></svg></div>
         <h2>Vielen Dank für deinen Vorschlag!</h2>
         <p class="note">Der Name ist direkt in der Tabelle gelandet.</p>
         <button id="againBtn" type="button" class="btn">Weiteren Vorschlag abgeben</button>
-        <button id="shareBtn2" type="button" class="btn-ghost">📤 Link teilen</button>
+        <button id="shareBtn2" type="button" class="btn-ghost"><svg class="ic"><use href="#i-share"/></svg>Link teilen</button>
     </div>
 </div>
 
@@ -326,7 +374,7 @@
                 const key = p.row + ':' + p.name;
                 const isVoted = !!voted[key];
                 const isNew = p.ts && (Date.now() - p.ts) < 24 * 60 * 60 * 1000;
-                const medal = ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
+                const medal = `<span class="medal${i < 3 ? ' m' + (i + 1) : ''}">${i + 1}</span>`;
                 const meta = p.reason ? escapeHtml(p.reason) : '';
                 return `
                 <tr>
@@ -338,7 +386,7 @@
                     <td class="act">
                         <button data-row="${p.row}" data-name="${escapeHtml(p.name)}" ${lockVotes ? 'disabled' : ''}
                             aria-pressed="${isVoted}" aria-label="Daumen für ${escapeHtml(p.name)}"
-                            class="vote-btn${isVoted ? ' on' : ''}">👍 <span>${p.votes}</span></button>
+                            class="vote-btn${isVoted ? ' on' : ''}"><svg class="ic" aria-hidden="true"><use href="#i-thumb"/></svg><span>${p.votes}</span></button>
                     </td>
                 </tr>`;
             }).join('');
@@ -455,12 +503,12 @@
         $('shareBtn').addEventListener('click', shareLink);
         $('shareBtn2').addEventListener('click', shareLink);
 
-        /* ===== Hell/Dunkel (Standard = hell, wie TravelBase und Quest Log) ===== */
+        /* ===== Hell/Dunkel (Standard = hell) ===== */
         function applyTheme(dark, save) {
             document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-            $('themeToggle').textContent = dark ? '☀️' : '🌙';
+            $('themeToggle').innerHTML = `<svg class="ic"><use href="#i-${dark ? 'sun' : 'moon'}"/></svg>`;
             $('themeToggle').setAttribute('aria-label', dark ? 'Zum hellen Modus wechseln' : 'Zum dunklen Modus wechseln');
-            const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#000000' : '#047857';
+            const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = dark ? '#000000' : '#f2f2f7';
             if (save) { try { localStorage.setItem('camper_theme_v1', dark ? 'dark' : 'light'); } catch (e) {} }
         }
         applyTheme(document.documentElement.getAttribute('data-theme') === 'dark', false);
@@ -524,7 +572,7 @@
         $('nickname').addEventListener('input', () => {
             const n = normName($('nickname').value);
             const dup = n && proposals.find(p => normName(p.name) === n);
-            showHint($('nicknameHint'), dup ? `„${dup.name}“ ist schon in der Liste – gib dort einfach deinen 👍 ab.` : '');
+            showHint($('nicknameHint'), dup ? `„${dup.name}“ ist schon in der Liste – gib dort einfach deinen Daumen ab.` : '');
         });
 
         let submitting = false;
@@ -536,7 +584,7 @@
             const name = $('nickname').value.trim().replace(/\s+/g, ' ');
             if (!name) { showHint($('nicknameHint'), 'Bitte gib einen Namen ein.'); $('nickname').focus(); return; }
             const dup = proposals.find(p => normName(p.name) === normName(name));
-            if (dup) { showHint($('nicknameHint'), `„${dup.name}“ ist schon in der Liste – gib dort einfach deinen 👍 ab.`); return; }
+            if (dup) { showHint($('nicknameHint'), `„${dup.name}“ ist schon in der Liste – gib dort einfach deinen Daumen ab.`); return; }
             if (!isOnline()) { showHint($('submitError'), 'Du bist offline. Bitte versuche es wieder, sobald du Netz hast.'); return; }
             if (isEnded()) return;
 

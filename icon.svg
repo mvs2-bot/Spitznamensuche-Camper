@@ -2,30 +2,23 @@
   <title>Camper mit Dachzelt</title>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#10b981"/>
-      <stop offset="1" stop-color="#047857"/>
+      <stop offset="0" stop-color="#ff8a66"/>
+      <stop offset="1" stop-color="#c8402a"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" fill="url(#bg)"/>
-  <!-- Boden -->
-  <rect x="86" y="362" width="340" height="10" rx="5" fill="#065f46" opacity=".55"/>
-  <!-- Dachzelt -->
-  <path d="M146 196 L170 142 H334 L356 196 Z" fill="#a8a37a"/>
-  <path d="M170 142 H334 L340 156 H164 Z" fill="#8a865f"/>
-  <rect x="138" y="190" width="226" height="16" rx="5" fill="#334155"/>
-  <!-- Karosserie -->
-  <path d="M112 338 V230 Q112 206 136 206 H318 Q338 206 351 221 L394 268 Q416 274 416 302 V338 Q416 348 406 348 H122 Q112 348 112 338 Z" fill="#cbd5e1"/>
-  <path d="M112 300 H416 V338 Q416 348 406 348 H122 Q112 348 112 338 Z" fill="#94a3b8"/>
-  <!-- Fenster -->
-  <rect x="134" y="224" width="74" height="44" rx="8" fill="#1e293b"/>
-  <rect x="220" y="224" width="74" height="44" rx="8" fill="#1e293b"/>
-  <path d="M306 224 H330 Q340 224 347 232 L380 268 H306 Z" fill="#1e293b"/>
-  <!-- Licht -->
-  <rect x="400" y="282" width="16" height="12" rx="4" fill="#fde68a"/>
-  <rect x="112" y="282" width="10" height="16" rx="3" fill="#f87171"/>
-  <!-- Räder -->
-  <circle cx="178" cy="348" r="36" fill="#0f172a"/>
-  <circle cx="178" cy="348" r="15" fill="#cbd5e1"/>
-  <circle cx="352" cy="348" r="36" fill="#0f172a"/>
-  <circle cx="352" cy="348" r="15" fill="#cbd5e1"/>
+  <!-- Linien-Camper im Stil der SF Symbols -->
+  <g fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Dachzelt -->
+    <path d="M142 196 168 140H330L354 196"/>
+    <!-- Karosserie -->
+    <path d="M110 344V226a30 30 0 0 1 30-30H322a30 30 0 0 1 22 10l58 66c6 7 10 15 10 24v38a10 10 0 0 1-10 10h-16"/>
+    <path d="M296 196V268H404"/>
+    <path d="M110 268H244"/>
+    <path d="M200 354H302"/>
+    <path d="M110 344v10h28"/>
+    <!-- Räder -->
+    <circle cx="168" cy="356" r="32"/>
+    <circle cx="346" cy="356" r="32"/>
+  </g>
 </svg>
