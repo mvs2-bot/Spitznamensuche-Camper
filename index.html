@@ -25,11 +25,12 @@
     <meta name="apple-mobile-web-app-title" content="Camper-Namen">
 <style>
     /* Apple-Designsprache wie „Zuhause“ und das mvs2-Dashboard: Systemschrift, Linien-Symbole,
-       eigener Akzent Koralle (Abendrot am Lagerfeuer) */
+       eigener Akzent Dunkelgrün (Wald) mit Graphit-Grau */
     :root {
         --bg: #f2f2f7; --card: #fff; --well: #f2f2f7; --hover: #e9e9ef; --line: #e2e2e7; --sep: rgba(60, 60, 67, .14);
         --ink: #1c1c1e; --text: #3a3a3c; --mute: #6c6c70;
-        --p1: #c8402a; --p1-soft: #fdeeea; --p1-line: #f4b8aa; --on-p1: #fff;
+        --p1: #1d6b44; --p1-soft: #e3f1e8; --p1-line: #a8d1b6; --on-p1: #fff;
+        --p1-fill: #1d6b44; --on-fill: #fff; --p2: #3a3a3c; --on-p2: #fff; --dot: #5cc58f;
         --gold: #9a5b00; --gold-soft: #fff2d6; --gold-line: #f6d58f;
         --medal: #e8a200; --silver: #8e8e93; --bronze: #a0632f;
         --danger: #d70015; --danger-soft: #ffe6e8;
@@ -40,7 +41,8 @@
     :root[data-theme="dark"] {
         color-scheme: dark; --bg: #000; --card: #1c1c1e; --well: #2c2c2e; --hover: #3a3a3c; --line: #38383a; --sep: rgba(84, 84, 88, .55);
         --ink: #f5f5f7; --text: #d1d1d6; --mute: #98989f;
-        --p1: #ff7a5c; --p1-soft: #3a1710; --p1-line: #7a3424; --on-p1: #2a0a04;
+        --p1: #5cc58f; --p1-soft: #10291b; --p1-line: #24573a; --on-p1: #04140b;
+        --p1-fill: #2a7a4f; --on-fill: #fff; --p2: #48484a; --on-p2: #f5f5f7; --dot: #5cc58f;
         --gold: #ffd60a; --gold-soft: #302805; --gold-line: #5c4a14;
         --medal: #ffd60a; --silver: #aeaeb2; --bronze: #d4a373;
         --danger: #ff6961; --danger-soft: #3a1412; --shadow: none;
@@ -73,8 +75,8 @@
     .icon-btn { background: var(--card); border: 0; border-radius: 50%; width: 36px; height: 36px; display: inline-grid; place-items: center; color: var(--ink); box-shadow: var(--shadow); }
     .icon-btn:hover { background: var(--hover); }
     .icon-btn .ic { width: 18px; height: 18px; }
-    .count-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border-radius: 999px; padding: 0 12px; height: 36px; font-size: 13px; font-weight: 600; color: var(--ink); box-shadow: var(--shadow); white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--p1); flex: none; animation: pulse 2s ease-in-out infinite; }
+    .count-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--p2); color: var(--on-p2); border-radius: 999px; padding: 0 12px; height: 36px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dot); flex: none; animation: pulse 2s ease-in-out infinite; }
     @keyframes pulse { 50% { opacity: .35; } }
 
     /* Karten & Hinweise */
@@ -113,12 +115,13 @@
     input::placeholder, textarea::placeholder { color: var(--mute); opacity: .8; }
     input:focus, textarea:focus { outline: none; background: var(--card); border-color: var(--p1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--p1) 22%, transparent); }
     .hint { font-size: 13px; font-weight: 500; color: var(--gold); margin: 6px 2px 0; }
-    .btn { width: 100%; background: var(--p1); color: var(--on-p1); border: 0; border-radius: 12px; padding: 11px 16px; min-height: 44px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn { width: 100%; background: var(--p1-fill); color: var(--on-fill); border: 0; border-radius: 12px; padding: 11px 16px; min-height: 44px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .btn:hover:not(:disabled) { filter: brightness(1.06); }
     .btn:active:not(:disabled) { transform: scale(.98); }
     .btn .ic { width: 18px; height: 18px; }
-    .btn-ghost { width: 100%; background: var(--card); color: var(--p1); border: 0; border-radius: 12px; padding: 10px 14px; min-height: 44px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-ghost { width: 100%; background: var(--card); color: var(--ink); border: 0; border-radius: 12px; padding: 10px 14px; min-height: 44px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-ghost:hover { background: var(--hover); }
+    .btn-ghost .ic { color: var(--p1); }
     .btn-ghost .ic { width: 18px; height: 18px; }
     .privacy { display: flex; gap: 6px; align-items: flex-start; justify-content: center; font-size: 12px; color: var(--mute); text-align: left; max-width: 440px; margin: 0 auto; }
     .privacy .ic { width: 14px; height: 14px; margin-top: 1px; }
@@ -142,7 +145,7 @@
     .vote-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 32px; font-size: 13px; font-weight: 600; border-radius: 999px; padding: 4px 12px; border: 0; background: var(--well); color: var(--ink); font-variant-numeric: tabular-nums; }
     .vote-btn .ic { width: 15px; height: 15px; }
     .vote-btn:not(.on):hover:not(:disabled) { background: var(--hover); }
-    .vote-btn.on { background: var(--p1); color: var(--on-p1); }
+    .vote-btn.on { background: var(--p1-fill); color: var(--on-fill); }
     .vote-btn.on .ic { fill: currentColor; fill-opacity: .25; }
 
     /* Dialoge */
