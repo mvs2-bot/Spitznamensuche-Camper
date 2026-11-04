@@ -10,7 +10,7 @@ Kleine Web-App (GitHub Pages), auf der Freunde Namen für den Camper (Ford Tourn
 | `sw.js` | Service Worker für Offline/PWA – bei Änderungen Version `V` hochzählen |
 | `manifest.json` | PWA-Manifest |
 | `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` | App-Icons |
-| `logo.jpg` | Camper-Bild oben auf der Seite (360 × 360 px) |
+| `hero.jpg`, `hero-800.jpg` | Camper-Bild oben auf der Seite (1280 × 960 und 800 × 600 px) |
 
 ## Einstellungen (oben im `<script>` der index.html)
 

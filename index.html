@@ -30,9 +30,8 @@
         --bg: #f2f2f7; --card: #fff; --well: #f2f2f7; --hover: #e9e9ef; --line: #e2e2e7; --sep: rgba(60, 60, 67, .14);
         --ink: #1c1c1e; --text: #3a3a3c; --mute: #6c6c70;
         --p1: #1d6b44; --p1-soft: #e3f1e8; --p1-line: #a8d1b6; --on-p1: #fff;
-        --p1-fill: #1d6b44; --on-fill: #fff; --p2: #3a3a3c; --on-p2: #fff; --dot: #5cc58f;
+        --p1-fill: #1d6b44; --on-fill: #fff;
         --gold: #9a5b00; --gold-soft: #fff2d6; --gold-line: #f6d58f;
-        --medal: #e8a200; --silver: #8e8e93; --bronze: #a0632f;
         --danger: #d70015; --danger-soft: #ffe6e8;
         --radius: 18px; --radius-s: 12px; --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .04);
         --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
@@ -42,9 +41,8 @@
         color-scheme: dark; --bg: #000; --card: #1c1c1e; --well: #2c2c2e; --hover: #3a3a3c; --line: #38383a; --sep: rgba(84, 84, 88, .55);
         --ink: #f5f5f7; --text: #d1d1d6; --mute: #98989f;
         --p1: #5cc58f; --p1-soft: #10291b; --p1-line: #24573a; --on-p1: #04140b;
-        --p1-fill: #2a7a4f; --on-fill: #fff; --p2: #48484a; --on-p2: #f5f5f7; --dot: #5cc58f;
+        --p1-fill: #2a7a4f; --on-fill: #fff;
         --gold: #ffd60a; --gold-soft: #302805; --gold-line: #5c4a14;
-        --medal: #ffd60a; --silver: #aeaeb2; --bronze: #d4a373;
         --danger: #ff6961; --danger-soft: #3a1412; --shadow: none;
     }
     * { box-sizing: border-box; }
@@ -61,105 +59,112 @@
     :focus-visible { outline: 2px solid var(--p1); outline-offset: 2px; }
     ::selection { background: var(--p1-line); color: var(--ink); }
     .ic { width: 1.25em; height: 1.25em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: -.25em; }
-    .wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+    .wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
 
     /* Kopf: klein, ruhig, Systemmaterial beim Scrollen */
-    .sticky-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; padding-block: 12px 10px; margin-inline: -4px; padding-inline: 4px;
+    .sticky-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; padding-block: 12px 8px; margin-inline: -4px; padding-inline: 4px;
         background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: saturate(1.8) blur(18px); backdrop-filter: saturate(1.8) blur(18px);
         display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
     .title { display: flex; align-items: center; gap: 10px; min-width: 0; }
     .app-ic { width: 36px; height: 36px; border-radius: 9px; flex: none; display: block; }
-    h1 { font-size: 22px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    h1 { font-size: 22px; font-weight: 600; letter-spacing: -.02em; color: var(--ink); line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sub { font-size: 12px; font-weight: 500; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .header-actions { display: flex; align-items: center; gap: 8px; flex: none; }
     .icon-btn { background: var(--card); border: 0; border-radius: 50%; width: 36px; height: 36px; display: inline-grid; place-items: center; color: var(--ink); box-shadow: var(--shadow); }
     .icon-btn:hover { background: var(--hover); }
     .icon-btn .ic { width: 18px; height: 18px; }
-    .count-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--p2); color: var(--on-p2); border-radius: 999px; padding: 0 12px; height: 36px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow); white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dot); flex: none; animation: pulse 2s ease-in-out infinite; }
-    @keyframes pulse { 50% { opacity: .35; } }
+    .count { font-size: 13px; font-weight: 500; color: var(--mute); white-space: nowrap; font-variant-numeric: tabular-nums; padding-inline: 4px; }
 
     /* Karten & Hinweise */
-    .box { background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); min-width: 0; }
+    .box { --pad: 16px; background: var(--card); border-radius: var(--radius); padding: var(--pad); box-shadow: var(--shadow); min-width: 0; }
     .box h2 { font-size: 16px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); display: flex; align-items: center; gap: 8px; }
-    .box h2 .ic { color: var(--p1); }
+    .box h2 .ic { color: var(--mute); }
     .note { font-size: 13px; color: var(--mute); display: inline-flex; align-items: center; gap: 4px; }
     .note .ic { width: 14px; height: 14px; }
-    .msg { font-size: 13px; font-weight: 500; border-radius: 10px; padding: 9px 12px; }
+    .msg { font-size: 13px; font-weight: 500; border-radius: 10px; padding: 8px 12px; }
     .msg.err { background: var(--danger-soft); color: var(--danger); }
-    .banner { display: flex; align-items: flex-start; gap: 8px; background: var(--gold-soft); color: var(--gold); border-radius: var(--radius-s); padding: 10px 14px; font-size: 13px; font-weight: 500; }
+    .banner { display: flex; align-items: flex-start; gap: 8px; background: var(--gold-soft); color: var(--gold); border-radius: var(--radius-s); padding: 12px 16px; font-size: 13px; font-weight: 500; }
     .banner .ic { width: 16px; height: 16px; margin-top: 1px; }
 
-    /* Titelbereich mit Camper-Foto */
-    .hero { text-align: center; margin-bottom: 18px; }
-    .hero-img img { display: block; width: 168px; height: 168px; object-fit: cover; border-radius: 22px; margin: 4px auto 14px; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08); }
-    .hero h2 { display: block; font-size: 20px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; }
-    .hero p { max-width: 360px; margin: 6px auto 0; color: var(--mute); }
-    .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 4px 11px; background: var(--well); color: var(--mute); }
-    .chip .ic { width: 14px; height: 14px; }
-    .chip.deadline { margin-top: 12px; text-align: left; border-radius: 12px; background: var(--gold-soft); color: var(--gold); font-variant-numeric: tabular-nums; }
-    .chip.new { font-size: 11px; padding: 1px 7px; margin-left: 6px; vertical-align: 1px; background: var(--p1-soft); color: var(--p1); }
+    /* Titelbereich: das Camper-Bild randlos oben in der Karte */
+    .hero { margin: calc(-1 * var(--pad)) calc(-1 * var(--pad)) 20px; }
+    .hero-img img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 60%;
+        border-radius: var(--radius) var(--radius) 0 0; background: var(--well); }
+    .hero-text { padding: 16px var(--pad) 0; }
+    .hero h2 { display: block; font-size: 22px; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; }
+    .hero p { margin-top: 4px; color: var(--mute); font-size: 15px; }
+    .deadline { margin-top: 12px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--mute); font-variant-numeric: tabular-nums; }
+    .deadline .ic { width: 16px; height: 16px; }
+    .new { font-size: 12px; font-weight: 400; color: var(--mute); margin-left: 8px; }
 
-    .winner { text-align: center; margin-bottom: 18px; padding: 14px; border-radius: var(--radius-s); background: var(--p1-soft); }
-    .winner small { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--p1); }
-    .winner b { display: block; font-size: 20px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); margin-top: 2px; }
+    .winner { margin-bottom: 20px; padding: 16px; border-radius: var(--radius-s); background: var(--p1-soft); }
+    .winner small { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--p1); }
+    .winner small .ic { width: 16px; height: 16px; }
+    .winner b { display: block; font-size: 22px; font-weight: 600; letter-spacing: -.02em; color: var(--ink); margin-top: 4px; }
 
     /* Formular: gruppiert wie iOS-Einstellungen */
-    form { display: flex; flex-direction: column; gap: 14px; margin: 0; }
-    .field-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 0 2px 6px; }
+    form { display: flex; flex-direction: column; gap: 16px; margin: 0; }
+    .field-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 0 0 8px; }
     label { font-size: 13px; font-weight: 500; color: var(--mute); }
-    .counter { font-size: 12px; color: var(--mute); font-variant-numeric: tabular-nums; }
+    .counter { font-size: 12px; color: var(--mute); font-variant-numeric: tabular-nums; visibility: hidden; }
+    .counter.near { visibility: visible; }
     .counter.full { color: var(--gold); font-weight: 600; }
     input[type=text], textarea { width: 100%; background: var(--well); border: 1px solid transparent; border-radius: 10px; padding: 10px 12px; font-size: 16px; line-height: 1.35; color: var(--ink); -webkit-appearance: none; appearance: none; }
     textarea { resize: none; display: block; }
     input::placeholder, textarea::placeholder { color: var(--mute); opacity: .8; }
     input:focus, textarea:focus { outline: none; background: var(--card); border-color: var(--p1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--p1) 22%, transparent); }
-    .hint { font-size: 13px; font-weight: 500; color: var(--gold); margin: 6px 2px 0; }
-    .btn { width: 100%; background: var(--p1-fill); color: var(--on-fill); border: 0; border-radius: 12px; padding: 11px 16px; min-height: 44px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .hint { font-size: 13px; font-weight: 500; color: var(--gold); margin: 8px 0 0; }
+    .btn { width: 100%; background: var(--p1-fill); color: var(--on-fill); border: 0; border-radius: 12px; padding: 12px 16px; min-height: 44px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn { transition: filter .15s ease-out, transform .15s ease-out; }
     .btn:hover:not(:disabled) { filter: brightness(1.06); }
     .btn:active:not(:disabled) { transform: scale(.98); }
     .btn .ic { width: 18px; height: 18px; }
-    .btn-ghost { width: 100%; background: var(--card); color: var(--ink); border: 0; border-radius: 12px; padding: 10px 14px; min-height: 44px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-ghost { width: 100%; background: var(--card); color: var(--ink); border: 0; border-radius: 12px; padding: 12px 16px; min-height: 44px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-ghost:hover { background: var(--hover); }
     .btn-ghost .ic { color: var(--p1); }
     .btn-ghost .ic { width: 18px; height: 18px; }
-    .privacy { display: flex; gap: 6px; align-items: flex-start; justify-content: center; font-size: 12px; color: var(--mute); text-align: left; max-width: 440px; margin: 0 auto; }
+    .privacy { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: var(--mute); }
     .privacy .ic { width: 14px; height: 14px; margin-top: 1px; }
 
     /* Rangliste */
-    .rank-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .rank-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .text-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 4px 12px; margin-right: -12px; border: 0; border-radius: 8px; background: none; color: var(--p1); font-size: 14px; font-weight: 500; transition: background-color .15s ease-out; }
+    .text-btn:hover { background: var(--well); }
+    .text-btn .ic { width: 16px; height: 16px; }
     .rank { width: 100%; border-collapse: collapse; }
-    .rank td { padding: 10px 0; border-top: .5px solid var(--sep); vertical-align: middle; }
+    .rank td { padding: 12px 0; border-top: .5px solid var(--sep); vertical-align: top; }
     .rank tr:first-child td { border-top: 0; }
-    .rank .pos { width: 40px; }
-    .medal { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-size: 13px; font-weight: 600; color: var(--mute); background: var(--well); font-variant-numeric: tabular-nums; }
-    .medal.m1 { background: var(--medal); color: #fff; }
-    .medal.m2 { background: var(--silver); color: #fff; }
-    .medal.m3 { background: var(--bronze); color: #fff; }
-    :root[data-theme="dark"] .medal.m1 { color: #2a2000; }
-    :root[data-theme="dark"] .medal.m2, :root[data-theme="dark"] .medal.m3 { color: #1c1c1e; }
-    .rank .name { font-size: 14px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
-    .rank .why { font-size: 13px; color: var(--mute); margin-top: 1px; overflow-wrap: anywhere; }
-    .rank .act { width: 76px; text-align: right; padding-left: 8px; }
-    .rank .empty { font-size: 14px; color: var(--mute); padding: 14px 0; }
-    .vote-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 32px; font-size: 13px; font-weight: 600; border-radius: 999px; padding: 4px 12px; border: 0; background: var(--well); color: var(--ink); font-variant-numeric: tabular-nums; }
-    .vote-btn .ic { width: 15px; height: 15px; }
+    .rank .pos { width: 28px; font-size: 14px; color: var(--mute); font-variant-numeric: tabular-nums; line-height: 32px; }
+    .rank tr.lead .pos { color: var(--p1); font-weight: 600; }
+    .rank .name { font-size: 15px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; line-height: 20px; padding-top: 6px; }
+    .rank .why { font-size: 13px; color: var(--mute); margin-top: 2px; overflow-wrap: anywhere; }
+    .rank .act { width: 76px; text-align: right; padding-left: 12px; }
+    .rank .empty { font-size: 14px; color: var(--mute); padding: 16px 0; }
+    /* Daumen als Strecke: Balken pro Name, beim Führenden fährt der Bus vorne */
+    .road { position: relative; height: 4px; margin-top: 8px; border-radius: 2px; background: var(--well); }
+    .road i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; background: color-mix(in srgb, var(--mute) 45%, transparent); transition: width .3s ease-out; }
+    .rank tr.lead .road { margin-top: 20px; }
+    .rank tr.lead .road i { background: var(--p1); }
+    .road .ic { position: absolute; bottom: 3px; width: 18px; height: 18px; color: var(--p1); transform: translateX(-100%); transition: left .3s ease-out; }
+    .vote-btn { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; font-size: 13px; font-weight: 600; border-radius: 16px; padding: 4px 12px; border: 0; background: var(--well); color: var(--ink); font-variant-numeric: tabular-nums; transition: background-color .15s ease-out; }
+    .vote-btn .ic { width: 16px; height: 16px; }
     .vote-btn:not(.on):hover:not(:disabled) { background: var(--hover); }
+    .vote-btn:active:not(:disabled) { transform: scale(.96); }
     .vote-btn.on { background: var(--p1-fill); color: var(--on-fill); }
     .vote-btn.on .ic { fill: currentColor; fill-opacity: .25; }
 
     /* Dialoge */
-    .overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, .32); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: opacity .3s; }
+    .overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, .32); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: opacity .25s ease-out; }
     :root[data-theme="dark"] .overlay { background: rgba(0, 0, 0, .6); }
     .overlay.opacity-0 { opacity: 0; }
-    .modal { width: 100%; max-width: 320px; text-align: center; margin: 0; padding: 22px 18px 18px; border-radius: 22px; box-shadow: 0 10px 40px rgba(0,0,0,.2); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+    .modal { width: 100%; max-width: 320px; text-align: center; margin: 0; padding: 24px 20px 20px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,.16); transition: transform .25s ease-out; }
     .modal.scale-95 { transform: scale(.95); }
     .modal h2 { display: block; }
-    .modal-icon { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--p1-soft); color: var(--p1); margin-bottom: 12px; }
+    .modal-icon { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: var(--p1-soft); color: var(--p1); margin-bottom: 12px; }
     .modal-icon .ic { width: 28px; height: 28px; }
-    .modal .note { display: block; margin: 4px 0 18px; }
+    .modal .note { display: block; margin: 4px 0 20px; }
     .modal .btn-ghost { margin-top: 8px; box-shadow: none; background: var(--well); }
-    .rail { position: relative; height: 34px; background: var(--well); border-radius: 10px; overflow: hidden; display: flex; align-items: center; }
+    .rail { position: relative; height: 32px; background: var(--well); border-radius: 10px; overflow: hidden; display: flex; align-items: center; }
     #progressBar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--p1-soft); }
     #carMover { position: absolute; left: 4px; z-index: 1; display: grid; place-items: center; color: var(--p1); }
     #carMover .ic { width: 24px; height: 24px; display: block; }
@@ -168,15 +173,16 @@
     @keyframes driveCar { 0% { transform: translateX(0px); } 100% { transform: translateX(var(--car-distance, 240px)); } }
     .animate-car-move { animation: driveCar var(--anim-duration, 4.5s) linear forwards; }
 
+    @media (min-width: 560px) {
+        .box { --pad: 24px; }
+        .hero-img img { aspect-ratio: 16 / 10; object-position: 50% 35%; }
+        .hero h2 { font-size: 26px; }
+    }
     @media (max-width: 420px) {
         h1 { font-size: 20px; }
-        .count-pill { padding: 0 10px; }
-        .pill-word { display: none; }
-        .hero-img img { width: 144px; height: 144px; border-radius: 20px; }
     }
     @media (prefers-reduced-motion: reduce) {
-        .dot { animation: none; }
-        .overlay, .modal { transition: none; }
+        .overlay, .modal, .road i, .road .ic { transition: none; }
     }
 </style>
 <script src="shared/ios-nav.js" defer></script>
@@ -202,11 +208,11 @@
             <img class="app-ic" src="icon.svg" alt="" width="36" height="36">
             <div style="min-width:0">
                 <h1>Camper-Namen</h1>
-                <div class="sub">Ford Tourneo Connect · Namenssuche</div>
+                <div class="sub">Ford Tourneo Connect</div>
             </div>
         </div>
         <div class="header-actions">
-            <div class="count-pill" title="Anzahl der Vorschläge"><span class="dot" aria-hidden="true"></span><span><span id="counterValue">…</span><span class="pill-word"> Vorschläge</span></span></div>
+            <div class="count"><span id="counterValue">…</span> Vorschläge</div>
             <button id="themeToggle" class="icon-btn" type="button" aria-label="Zum dunklen Modus wechseln"><svg class="ic"><use href="#i-moon"/></svg></button>
         </div>
     </header>
@@ -218,11 +224,14 @@
         <div class="box">
             <!-- Titel-Bereich mit Camper-Foto -->
             <div class="hero">
-                <div class="hero-img"><img src="logo.jpg" alt="Mein Camper" width="168" height="168"></div>
-                <h2>Wie soll mein Camper heißen?</h2>
-                <p>Campingbox &amp; Dachzelt sind bereit. Welcher Spitzname passt perfekt?</p>
-                <!-- Countdown / Enddatum (nur sichtbar, wenn VOTING_END gesetzt ist) -->
-                <div id="deadlineBox" class="chip deadline hidden"><svg class="ic"><use href="#i-hourglass"/></svg><span id="deadlineText"></span></div>
+                <div class="hero-img"><img src="hero.jpg" srcset="hero-800.jpg 800w, hero.jpg 1280w" sizes="(min-width: 672px) 640px, 100vw"
+                    alt="Der Camper mit aufgeklapptem Dachzelt und Campingbox auf einer Wiese" width="1280" height="960"></div>
+                <div class="hero-text">
+                    <h2>Wie soll mein Camper heißen?</h2>
+                    <p>Campingbox ist eingebaut, Dachzelt ist drauf. Fehlt nur noch ein Name.</p>
+                    <!-- Countdown / Enddatum (nur sichtbar, wenn VOTING_END gesetzt ist) -->
+                    <div id="deadlineBox" class="deadline hidden"><svg class="ic"><use href="#i-hourglass"/></svg><span id="deadlineText"></span></div>
+                </div>
             </div>
 
             <!-- Gewinner (nur nach Ende der Abstimmung) -->
@@ -235,10 +244,10 @@
             <form id="nicknameForm" novalidate>
                 <div>
                     <div class="field-head">
-                        <label for="nickname">Dein Namensvorschlag *</label>
+                        <label for="nickname">Dein Namensvorschlag</label>
                         <span id="count-nickname" class="counter">0 / 40</span>
                     </div>
-                    <input type="text" id="nickname" name="Spitzname" required maxlength="40" autocomplete="off" placeholder="z.B. Knutschkugel, Heimo 2.0, ...">
+                    <input type="text" id="nickname" name="Spitzname" required maxlength="40" autocomplete="off" placeholder="z. B. Heimo 2.0">
                     <p id="nicknameHint" class="hint hidden"></p>
                 </div>
 
@@ -255,7 +264,7 @@
                         <label for="reason">Warum passt dieser Name? (optional)</label>
                         <span id="count-reason" class="counter">0 / 200</span>
                     </div>
-                    <textarea id="reason" name="Begruendung" rows="2" maxlength="200" autocomplete="off" placeholder="Kurze Story oder Begründung..."></textarea>
+                    <textarea id="reason" name="Begruendung" rows="2" maxlength="200" autocomplete="off" placeholder="Kurze Geschichte dazu"></textarea>
                 </div>
 
                 <!-- Fehlermeldung beim Absenden -->
@@ -267,14 +276,11 @@
             </form>
         </div>
 
-        <!-- Teilen -->
-        <button id="shareBtn" type="button" class="btn-ghost"><svg class="ic"><use href="#i-share"/></svg><span id="shareLabel">Link teilen &amp; Freunde abstimmen lassen</span></button>
-
         <!-- Rangliste -->
         <section class="box">
             <div class="rank-head">
                 <h2><svg class="ic"><use href="#i-trophy"/></svg>Aktuelle Vorschläge</h2>
-                <span class="note">Sortiert nach <svg class="ic" aria-label="Daumen"><use href="#i-thumb"/></svg></span>
+                <button id="shareBtn" type="button" class="text-btn"><svg class="ic"><use href="#i-share"/></svg><span id="shareLabel">Teilen</span></button>
             </div>
             <table class="rank">
                 <tbody id="rankingBody">
@@ -290,7 +296,7 @@
     <div class="box modal scale-95" id="loadingModalContent">
         <div class="modal-icon"><svg class="ic"><use href="#i-van"/></svg></div>
         <h2>Vorschlag wird übermittelt …</h2>
-        <p class="note">Packe die Campingbox ein und fahre ab!</p>
+        <p class="note">Campingbox ist gepackt, der Bus fährt los</p>
         <div id="railTrack" class="rail">
             <div id="progressBar"></div>
             <div id="carMover"><svg class="ic"><use href="#i-van"/></svg></div>
@@ -302,9 +308,9 @@
 <div id="successModal" class="overlay hidden opacity-0">
     <div class="box modal scale-95" id="successModalContent">
         <div class="modal-icon"><svg class="ic"><use href="#i-party"/></svg></div>
-        <h2>Vielen Dank für deinen Vorschlag!</h2>
+        <h2>Danke für deinen Vorschlag</h2>
         <p class="note">Der Name ist direkt in der Tabelle gelandet.</p>
-        <button id="againBtn" type="button" class="btn">Weiteren Vorschlag abgeben</button>
+        <button id="againBtn" type="button" class="btn">Noch einen vorschlagen</button>
         <button id="shareBtn2" type="button" class="btn-ghost"><svg class="ic"><use href="#i-share"/></svg>Link teilen</button>
     </div>
 </div>
@@ -317,7 +323,7 @@
         // Beispiel: '2026-11-30T20:00:00+01:00'
         const VOTING_END = '2027-02-28T23:59:59+01:00';
 
-        const SHARE_TEXT = 'Hilf mit, einen Namen für meinen Camper zu finden! 🚐 Schlag einen vor oder gib deinen Daumen ab:';
+        const SHARE_TEXT = 'Hilf mit, einen Namen für meinen Camper zu finden. Schlag einen vor oder gib deinen Daumen ab:';
         /* ================================================= */
 
         const $ = id => document.getElementById(id);
@@ -340,6 +346,7 @@
             const counter = $('count-' + fieldId);
             counter.innerText = `${len} / ${max}`;
             counter.classList.toggle('full', len >= max);
+            counter.classList.toggle('near', len >= max * 0.8);
         }
         [['nickname', 40], ['author', 20], ['reason', 200]].forEach(([id, max]) => {
             $(id).addEventListener('input', () => updateCount(id, max));
@@ -366,24 +373,28 @@
             const body = $('rankingBody');
             renderCounter();
             if (!proposals.length) {
-                body.innerHTML = '<tr><td class="empty">Noch keine Vorschläge – sei der Erste!</td></tr>';
+                body.innerHTML = '<tr><td class="empty">Noch keine Vorschläge. Mach den ersten.</td></tr>';
                 renderWinner();
                 return;
             }
             const voted = getVoted();
             const lockVotes = isEnded() || !isOnline();
+            const maxVotes = Math.max(0, ...proposals.map(p => p.votes));
             body.innerHTML = sortedProposals().map((p, i) => {
                 const key = p.row + ':' + p.name;
                 const isVoted = !!voted[key];
                 const isNew = p.ts && (Date.now() - p.ts) < 24 * 60 * 60 * 1000;
-                const medal = `<span class="medal${i < 3 ? ' m' + (i + 1) : ''}">${i + 1}</span>`;
                 const meta = p.reason ? escapeHtml(p.reason) : '';
+                const lead = i === 0 && p.votes > 0;
+                const pct = maxVotes ? Math.round(p.votes / maxVotes * 100) : 0;
+                const road = maxVotes ? `<div class="road" aria-hidden="true"><i style="width:${pct}%"></i>${lead ? `<svg class="ic" style="left:${pct}%"><use href="#i-van"/></svg>` : ''}</div>` : '';
                 return `
-                <tr>
-                    <td class="pos">${medal}</td>
+                <tr${lead ? ' class="lead"' : ''}>
+                    <td class="pos">${i + 1}</td>
                     <td>
-                        <div class="name">${escapeHtml(p.name)}${isNew ? '<span class="chip new">Neu</span>' : ''}</div>
+                        <div class="name">${escapeHtml(p.name)}${isNew ? '<span class="new">neu</span>' : ''}</div>
                         ${meta ? `<div class="why">${meta}</div>` : ''}
+                        ${road}
                     </td>
                     <td class="act">
                         <button data-row="${p.row}" data-name="${escapeHtml(p.name)}" ${lockVotes ? 'disabled' : ''}
@@ -449,12 +460,13 @@
             box.classList.remove('hidden');
         }
 
+        const longDate = d => d.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
         function updateDeadline() {
             if (!endDate || isNaN(endDate)) return;
             const box = $('deadlineBox');
             box.classList.remove('hidden');
             if (isEnded()) {
-                $('deadlineText').textContent = 'Abstimmung beendet am ' + endDate.toLocaleDateString('de-DE');
+                $('deadlineText').textContent = 'Abstimmung beendet am ' + longDate(endDate);
                 form.classList.add('hidden');
                 $('shareLabel').textContent = 'Ergebnis teilen';
                 renderRanking();
@@ -464,8 +476,8 @@
             const d = Math.floor(ms / 86400000);
             const h = Math.floor(ms / 3600000) % 24;
             const m = Math.floor(ms / 60000) % 60;
-            const rest = d > 0 ? `${d} ${d === 1 ? 'Tag' : 'Tage'}, ${h} Std.` : (h > 0 ? `${h} Std., ${m} Min.` : `${m} Min.`);
-            $('deadlineText').textContent = `Abstimmung läuft noch ${rest} (bis ${endDate.toLocaleDateString('de-DE')})`;
+            const rest = d > 0 ? `${d} ${d === 1 ? 'Tag' : 'Tage'}` : (h > 0 ? `${h} Std. ${m} Min.` : `${m} Min.`);
+            $('deadlineText').textContent = `Noch ${rest}, bis ${longDate(endDate)}`;
         }
         updateDeadline();
         if (endDate) setInterval(updateDeadline, 30000);
@@ -489,14 +501,14 @@
         async function shareLink() {
             const url = location.origin + location.pathname;
             if (navigator.share) {
-                const text = isEnded() && proposals.length ? `Mein Camper heißt jetzt „${sortedProposals()[0].name}“! 🚐` : SHARE_TEXT;
+                const text = isEnded() && proposals.length ? `Mein Camper heißt jetzt „${sortedProposals()[0].name}“.` : SHARE_TEXT;
                 try { await navigator.share({ title: 'Namenssuche für den Camper-Bus', text, url }); } catch (e) {}
                 return;
             }
             try {
                 await navigator.clipboard.writeText(SHARE_TEXT + ' ' + url);
                 const l = $('shareLabel'); const old = l.textContent;
-                l.textContent = 'Link kopiert ✓';
+                l.textContent = 'Link kopiert';
                 setTimeout(() => { l.textContent = old; }, 2000);
             } catch (e) {
                 window.prompt('Link kopieren:', url);
@@ -623,7 +635,7 @@
                 openSuccess();
                 loadProposals();
             } else {
-                showHint($('submitError'), 'Dein Vorschlag konnte nicht gesendet werden. Bitte prüfe deine Verbindung und versuche es nochmal – dein Text bleibt erhalten.');
+                showHint($('submitError'), 'Dein Vorschlag konnte nicht gesendet werden. Prüf bitte deine Verbindung und versuch es nochmal, dein Text bleibt erhalten.');
             }
         });
 
